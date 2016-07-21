@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>IPTC-Attacker</title>
+  <style>
+  #page {
+    background: #CCC;
+    border: 1px solid #666;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    color: #333;
+    position: absolute;
+    width: 500px;
+    left: 50%;
+    margin-top: 20px;
+    margin-left: -250px;
+  }
+  h1, h3, p, input, button {
+    margin-left:10px;
+  }
+  #imprint {
+    font-size:0.7em;
+  }
+  #tiny-payload {
+    width: 80%;
+  }
+  </style>
+  <script type="text/javascript" language="javascript">
+  function check(toogle) {
+    var boxes = new Array();
+    boxes = document.getElementsByTagName('input');
+    for (var i=0; i<boxes.length; i++)  {
+      if (boxes[i].type == 'checkbox') boxes[i].checked = toogle;
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="page">
+    <h1>IPTC-Attacker</h1>
+	<p>As an <a href="https://sourceforge.net/p/iptc-attacker">open source</a> penetration testing tool, IPTC-Attacker allows to create an image with <a href="http://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata-201007_1.pdf">IPTC</a> metadata containing testing vectors for Cross-Site Scripting attacks. Each checkbox can be used to include a huge collection of payloads into the selected tags (<a href="http://html5sec.org/">HTML5sec</a>, <a href="https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet">XSS Cheat Sheet</a>). If a checkbox will be not selected, the string <i>aaa'bbb&quot;ccc&lt;ddd</i> is automatically included into the unchecked IPTC tag.</p>
+	<p>Therefore, testing for XSS vulnerabilities via IPTC metadata is possible by looking into the source code of the attacked Web application; strictly speaking for <i>aaa'bbb&quot;ccc&lt;ddd</i> or alternatively by verifying if, for example, alert-windows appear due to the XSS vector collection.
+	</p>
+    <hr>
+    <button onclick="check(true)">Check all</button>
+    <button onclick="check(false)">Uncheck all</button>
+    <button onclick="document.getElementById('IPTC005').checked=true; document.getElementById('tiny-payload').value='aaa\'bbb&quot;ccc&lt;ddd'">Default Settings</button>
+    <hr>
+    <form action="image.php" method="GET">
+      <p><strong>Default test string of no checkbox is selected</strong></p>
+      <input type="text" name="tiny-payload" id="tiny-payload" value="aaa'bbb&quot;ccc&lt;ddd"><br>
+      <hr>
+      <p><strong>IIM property mapping and IPTC property names</strong></p>
+      <input type="checkbox" name="IPTC004" value="1">
+        <label for="IPTC004">2#004, OBJECT_ATTRIBUTE_REFERENCE</label><br>
+      <input type="checkbox" name="IPTC005" id="IPTC005" value="1">
+        <label for="IPTC005">2#005, OBJECT_NAME</label><br>
+      <input type="checkbox" name="IPTC007" value="1">
+        <label for="IPTC007">2#007, EDIT_STATUS</label><br>
+      <input type="checkbox" name="IPTC010" value="1">
+        <label for="IPTC010">2#010, PRIORITY</label><br>
+      <input type="checkbox" name="IPTC012" value="1">
+        <label for="IPTC012">2#012, SUBJECT_REFERENCE</label><br>
+      <input type="checkbox" name="IPTC015" value="1">
+        <label for="IPTC015">2#015, CATEGORY</label><br>
+      <input type="checkbox" name="IPTC020" value="1">
+        <label for="IPTC020">2#020, SUPPLEMENTAL_CATEGORY</label><br>
+      <input type="checkbox" name="IPTC022" value="1">
+        <label for="IPTC022">2#022, FIXTURE_IDENTIFIER</label><br>
+      <input type="checkbox" name="IPTC025" value="1">
+        <label for="IPTC025">2#025, KEYWORDS</label><br>
+      <input type="checkbox" name="IPTC030" value="1">
+        <label for="IPTC030">2#030, RELEASE_DATE</label><br>
+      <input type="checkbox" name="IPTC035" value="1">
+        <label for="IPTC035">2#035, RELEASE_TIME</label><br>
+      <input type="checkbox" name="IPTC040" value="1">
+        <label for="IPTC040">2#040, SPECIAL_INSTRUCTIONS</label><br>
+      <input type="checkbox" name="IPTC045" value="1">
+        <label for="IPTC045">2#045, REFERENCE_SERVICE</label><br>
+      <input type="checkbox" name="IPTC047" value="1">
+        <label for="IPTC047">2#047, REFERENCE_DATE</label><br>
+      <input type="checkbox" name="IPTC050" value="1">
+        <label for="IPTC050">2#050, REFERENCE_NUMBER</label><br>
+      <input type="checkbox" name="IPTC055" value="1">
+        <label for="IPTC055">2#055, CREATED_DATE</label><br>
+      <input type="checkbox" name="IPTC060" value="1">
+        <label for="IPTC060">2#060, CREATED_TIME</label><br>
+      <input type="checkbox" name="IPTC065" value="1">
+        <label for="IPTC065">2#065, ORIGINATING_PROGRAM</label><br>
+      <input type="checkbox" name="IPTC070" value="1">
+        <label for="IPTC070">2#070, PROGRAM_VERSION</label><br>
+      <input type="checkbox" name="IPTC075" value="1">
+        <label for="IPTC075">2#075, OBJECT_CYCLE</label><br>
+      <input type="checkbox" name="IPTC080" value="1">
+        <label for="IPTC080">2#080, BYLINE</label><br>
+      <input type="checkbox" name="IPTC085" value="1">
+        <label for="IPTC085">2#085, BYLINE_TITLE</label><br>
+      <input type="checkbox" name="IPTC090" value="1">
+        <label for="IPTC090">2#090, CITY</label><br>
+      <input type="checkbox" name="IPTC092" value="1">
+        <label for="IPTC092">2#092, SUBLOCATION</label><br>
+      <input type="checkbox" name="IPTC095" value="1">
+        <label for="IPTC095">2#095, PROVINCE_STATE</label><br>
+      <input type="checkbox" name="IPTC100" value="1">
+        <label for="IPTC100">2#100, COUNTRY_CODE</label><br>
+      <input type="checkbox" name="IPTC101" value="1">
+        <label for="IPTC101">2#101, COUNTRY</label><br>
+      <input type="checkbox" name="IPTC103" value="1">
+        <label for="IPTC103">2#103, ORIGINAL_TRANSMISSION_REFERENCE</label><br>
+      <input type="checkbox" name="IPTC105" value="1">
+        <label for="IPTC105">2#105, HEADLINE</label><br>
+      <input type="checkbox" name="IPTC110" value="1">
+        <label for="IPTC110">2#110, CREDIT</label><br>
+      <input type="checkbox" name="IPTC115" value="1">
+        <label for="IPTC115">2#115, SOURCE</label><br>
+      <input type="checkbox" name="IPTC116" value="1">
+        <label for="IPTC116">2#116, COPYRIGHT_NOTICE</label><br>
+      <input type="checkbox" name="IPTC118" value="1">
+        <label for="IPTC118">2#118, CONTACT</label><br>
+      <input type="checkbox" name="IPTC120" value="1">
+        <label for="IPTC120">2#120, CAPTION</label><br>
+      <input type="checkbox" name="IPTC121" value="1">
+        <label for="IPTC121">2#121, LOCAL_CAPTION</label><br>
+      <input type="checkbox" name="IPTC122" value="1">
+        <label for="IPTC122">2#122, WRITER_EDITOR</label><br>
+  	<br>
+      <input type="submit" value="Download">
+    </form>
+    <hr>
+	<p id="imprint">
+	  Ruhr-Universit&auml;t Bochum, Lehrstuhl f&uuml;r Netz- und Datensicherheit (Marcus Niemietz), Universit&auml;tsstra&szlig;e 150, 44801 Bochum, Germany<br>
+	  Mail: marcus.niemietz@rub.de &bull; Tel.: (+49)(0)234 / 32 - 26551 
+	</p>
+  </div>
+</body>
+</html>
