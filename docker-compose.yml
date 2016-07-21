@@ -26,4 +26,4 @@ services:
     storage:
         build: ./docker/storage
         volumes:
-            - ./web:/var/www/attacker
+            - .:/var/www/attacker
