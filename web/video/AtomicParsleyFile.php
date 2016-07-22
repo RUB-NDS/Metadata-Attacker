@@ -43,6 +43,11 @@ class AtomicParsleyFile
     protected $podcastGUID;
     protected $purchaseDate;
     protected $encodingTool; // TODO: Sinnvoll? Video dadurch noch abspielbar?
+    protected $encodedBy;
+    protected $apID;
+    protected $cnID;
+    protected $geID;
+    protected $xID;
     protected $gapless;
     protected $contentRating;
 
@@ -209,6 +214,16 @@ class AtomicParsleyFile
         if($this->category      != null) $metadataBag .=    " --category '"     . $this->category       . "'";
         if($this->keyword       != null) $metadataBag .=    " --keyword '"      . $this->keyword        . "'";
         if($this->podcastURL    != null) $metadataBag .=    " --podcastURL '"   . $this->podcastURL     . "'";
+        if($this->podcastGUID   != null) $metadataBag .=    " --podcastURL '"   . $this->podcastURL     . "'";
+        if($this->purchaseDate  != null) $metadataBag .=    " --purchaseDate '" . $this->purchaseDate   . "'";
+        if($this->encodingTool  != null) $metadataBag .=    " --encodingTool '" . $this->encodingTool   . "'";
+        if($this->encodedBy     != null) $metadataBag .=    " --encodedBy '"    . $this->encodedBy      . "'";
+        if($this->apID          != null) $metadataBag .=    " --apID '"         . $this->apID           . "'";
+        if($this->cnID          != null) $metadataBag .=    " --cnID '"         . $this->cnID           . "'";
+        if($this->geID          != null) $metadataBag .=    " --geID '"         . $this->geID           . "'";
+        if($this->xID           != null) $metadataBag .=    " --xID '"          . $this->xID            . "'";
+        if($this->gapless       != null) $metadataBag .=    " --gapless '"      . $this->gapless        . "'";
+        if($this->contentRating != null) $metadataBag .=    " --contentRating '". $this->contentRating  . "'";
 
         return $metadataBag;
     }
@@ -866,6 +881,86 @@ class AtomicParsleyFile
     public function setContentRating($contentRating)
     {
         $this->contentRating = $contentRating;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEncodedBy()
+    {
+        return $this->encodedBy;
+    }
+
+    /**
+     * @param mixed $encodedBy
+     */
+    public function setEncodedBy($encodedBy)
+    {
+        $this->encodedBy = $encodedBy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApID()
+    {
+        return $this->apID;
+    }
+
+    /**
+     * @param mixed $apID
+     */
+    public function setApID($apID)
+    {
+        $this->apID = $apID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCnID()
+    {
+        return $this->cnID;
+    }
+
+    /**
+     * @param mixed $cnID
+     */
+    public function setCnID($cnID)
+    {
+        $this->cnID = $cnID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGeID()
+    {
+        return $this->geID;
+    }
+
+    /**
+     * @param mixed $geID
+     */
+    public function setGeID($geID)
+    {
+        $this->geID = $geID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getXID()
+    {
+        return $this->xID;
+    }
+
+    /**
+     * @param mixed $xID
+     */
+    public function setXID($xID)
+    {
+        $this->xID = $xID;
     }
 
 
