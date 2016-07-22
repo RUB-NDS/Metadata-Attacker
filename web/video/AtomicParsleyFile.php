@@ -40,6 +40,11 @@ class AtomicParsleyFile
     protected $category;
     protected $keyword;
     protected $podcastURL;
+    protected $podcastGUID;
+    protected $purchaseDate;
+    protected $encodingTool; // TODO: Sinnvoll? Video dadurch noch abspielbar?
+    protected $gapless;
+    protected $contentRating;
 
     /**
      * AtomicParsleyFile constructor.
@@ -75,10 +80,69 @@ class AtomicParsleyFile
         exec("AtomicParsley " . $this->getFullFilepath() . " -t", $atomicParsleyReturns);
 
         foreach ($atomicParsleyReturns as $entry) {
-            if(strpos($entry, "Atom \"©alb\"") !== false)
-                $this->setAlbum(substr($entry, 23));
-            if(strpos($entry, "Atom \"©nam\"") !== false)
+            if(strpos($entry, 'Atom "©ART"') !== false)
+                $this->setArtist(substr($entry, 23));
+            else if(strpos($entry, 'Atom "©nam"') !== false)
                 $this->setTitle(substr($entry, 23));
+            else if(strpos($entry, 'Atom "©alb"') !== false)
+                $this->setAlbum(substr($entry, 23));
+            else if(strpos($entry, 'Atom "©gen"') !== false)
+                $this->setGenre(substr($entry, 23));
+            else if(strpos($entry, 'Atom "trkn"') !== false)
+                $this->setTracknum(substr($entry, 23));     // TODO: max. values? 45575 of 25614 from 111111/222222
+            else if(strpos($entry, 'Atom "disk"') !== false)
+                $this->setDisk(substr($entry, 23));     // TODO: max. values? 5653 of 51228 from 333333/444444
+            else if(strpos($entry, 'Atom "©gen"') !== false)
+                $this->setGenre(substr($entry, 23));
+            else if(strpos($entry, 'Atom "©cmt"') !== false)
+                $this->setComment(substr($entry, 23));
+            else if(strpos($entry, 'Atom "©day"') !== false)    // TODO: Check @day == year ???
+                $this->setYear(substr($entry, 23));
+            else if(strpos($entry, 'Atom "©lyr"') !== false)
+                $this->setLyrics(substr($entry, 23));
+            else if(strpos($entry, 'Atom "©wrt"') !== false)
+                $this->setComposer(substr($entry, 23));
+            else if(strpos($entry, 'Atom "cprt"') !== false)
+                $this->setCopyright(substr($entry, 23));
+            else if(strpos($entry, 'Atom "©grp"') !== false)
+                $this->setGrouping(substr($entry, 23));
+            else if(strpos($entry, 'Atom "covr"') !== false)    // TODO: Artwork as URL? FILE-URL?
+                $this->setArtwork(substr($entry, 23));
+            // TODO: BPM
+            else if(strpos($entry, 'Atom "aART"') !== false)
+                $this->setAlbumArtist(substr($entry, 23));
+            // TODO: compilation
+            // TODO: advisory
+            else if(strpos($entry, 'Atom "desc"') !== false)
+                $this->setDescription(substr($entry, 23));
+            else if(strpos($entry, 'Atom "tvnn"') !== false)
+                $this->setTVNetwork(substr($entry, 23));
+            else if(strpos($entry, 'Atom "tvsh"') !== false)
+                $this->setTVShowName(substr($entry, 23));
+            else if(strpos($entry, 'Atom "tven"') !== false)
+                $this->setTVEpisode(substr($entry, 23));
+            else if(strpos($entry, 'Atom "tvsn"') !== false)
+                $this->setTVSeasonNum(substr($entry, 23));      // TODO: max. value? 56881? 777777 set
+            else if(strpos($entry, 'Atom "tves"') !== false)
+                $this->setTVEpisodeNum(substr($entry, 23));     // TODO: max. value? 36920? 888888 set
+            else if(strpos($entry, 'Atom "pcst"') !== false)
+                $this->setPodcastFlag(substr($entry, 23));      // TODO: only boolean?
+            else if(strpos($entry, 'Atom "catg"') !== false)
+                $this->setCategory(substr($entry, 23));
+            else if(strpos($entry, 'Atom "keyw"') !== false)
+                $this->setKeyword(substr($entry, 23));
+            else if(strpos($entry, 'Atom "purl"') !== false)
+                $this->setPodcastURL(substr($entry, 23));
+            else if(strpos($entry, 'Atom "egid"') !== false)
+                $this->setPodcastGUID(substr($entry, 23));
+            else if(strpos($entry, 'Atom "purd"') !== false)
+                $this->setPurchaseDate(substr($entry, 23));
+            else if(strpos($entry, 'Atom "pgap"') !== false)
+                $this->setGapless(substr($entry, 23));     // TODO: only boolean?
+            else if(strpos($entry, 'Atom "rtng"') !== false)
+                $this->setContentRating(substr($entry, 23));     // TODO: which values? "Inoffensive" from "vvvvvv"
+            else if(strpos($entry, 'Atom "©too"') !== false)
+                $this->setEncodingTool(substr($entry, 23));
         }
     }
 
@@ -105,6 +169,11 @@ class AtomicParsleyFile
 
     // Helper functions
 
+    /**
+     * Creates a string to set all given or selected metadata to the file.
+     *
+     * @return string
+     */
     protected function getMetadataBag() {
         $metadataBag = "";
 
@@ -718,5 +787,86 @@ class AtomicParsleyFile
     {
         return $this->short;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPodcastGUID()
+    {
+        return $this->podcastGUID;
+    }
+
+    /**
+     * @param mixed $podcastGUID
+     */
+    public function setPodcastGUID($podcastGUID)
+    {
+        $this->podcastGUID = $podcastGUID;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPurchaseDate()
+    {
+        return $this->purchaseDate;
+    }
+
+    /**
+     * @param mixed $purchaseDate
+     */
+    public function setPurchaseDate($purchaseDate)
+    {
+        $this->purchaseDate = $purchaseDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEncodingTool()
+    {
+        return $this->encodingTool;
+    }
+
+    /**
+     * @param mixed $encodingTool
+     */
+    public function setEncodingTool($encodingTool)
+    {
+        $this->encodingTool = $encodingTool;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGapless()
+    {
+        return $this->gapless;
+    }
+
+    /**
+     * @param mixed $gapless
+     */
+    public function setGapless($gapless)
+    {
+        $this->gapless = $gapless;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContentRating()
+    {
+        return $this->contentRating;
+    }
+
+    /**
+     * @param mixed $contentRating
+     */
+    public function setContentRating($contentRating)
+    {
+        $this->contentRating = $contentRating;
+    }
+
 
 }
