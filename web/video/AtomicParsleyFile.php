@@ -5,7 +5,7 @@ class AtomicParsleyFile
     const filepath = "/tmp/Metadata-Attacker/";
 
     protected $filename;
-    protected $short;
+    protected $short = true;
 
     // Possible Metadata from AtomicParsley.
     protected $artist;
@@ -44,12 +44,42 @@ class AtomicParsleyFile
     /**
      * AtomicParsleyFile constructor.
      *
-     * @param bool $short for the 30 sec video. Otherwise the 5 min video would be used.
      */
-    public function __construct($short = true)
+    public function __construct($loadFileFromPath = null)
     {
-        $this->short = $short;
         $this->filename = md5(microtime()) . ".mp4";
+        $this->setAlbum("Standard");
+
+        // Load file information if a file is specified.
+        if($loadFileFromPath != null) {
+            if(file_exists($loadFileFromPath)) {
+                if(is_file($loadFileFromPath)) {
+                    // Set all metadata
+                    $this->filename = substr($loadFileFromPath, strrpos($loadFileFromPath, "/") + 1);
+                    $this->readMetadata();
+                }
+                else
+                    throw new ErrorException("The given $loadFileFromPath is a directory");
+            }
+            else
+                throw new ErrorException("The given file does not exist.");
+        }
+
+    }
+
+    /**
+     * Reads all given metadata via AtomicParsley from file and sets the variables.
+     */
+    public function readMetadata() {
+        // Liefert lange Liste von Codeausgabe
+        exec("AtomicParsley " . $this->getFullFilepath() . " -t", $atomicParsleyReturns);
+
+        foreach ($atomicParsleyReturns as $entry) {
+            if(strpos($entry, "Atom \"©alb\"") !== false)
+                $this->setAlbum(substr($entry, 23));
+            if(strpos($entry, "Atom \"©nam\"") !== false)
+                $this->setTitle(substr($entry, 23));
+        }
     }
 
     /**
@@ -61,10 +91,57 @@ class AtomicParsleyFile
         if(! file_exists(AtomicParsleyFile::filepath))
             mkdir(AtomicParsleyFile::filepath);
 
-        if(file_put_contents(AtomicParsleyFile::filepath . $this->filename, $this->getTestfile()) !== false)
+        $success = exec("AtomicParsley " .
+            $this->getTestfile() .
+            $this->getMetadataBag() .
+            " -o " . $this->getFullFilepath()
+        );
+
+        if($success !== false)
             return true;
 
         return false;
+    }
+
+    // Helper functions
+
+    protected function getMetadataBag() {
+        $metadataBag = "";
+
+        if($this->artist        != null) $metadataBag .=    " --artist '"       . $this->artist         . "'";
+        if($this->title         != null) $metadataBag .=    " --title '"        . $this->title          . "'";
+        if($this->album         != null) $metadataBag .=    " --album '"        . $this->album          . "'";
+        if($this->genre         != null) $metadataBag .=    " --genre '"        . $this->genre          . "'";
+        if($this->tracknum      != null) $metadataBag .=    " --tracknum '"     . $this->tracknum       . "'";
+        if($this->disk          != null) $metadataBag .=    " --disk '"         . $this->disk           . "'";
+        if($this->comment       != null) $metadataBag .=    " --comment '"      . $this->comment        . "'";
+        if($this->year          != null) $metadataBag .=    " --year '"         . $this->year           . "'";
+        if($this->lyrics        != null) $metadataBag .=    " --lyrics '"       . $this->lyrics         . "'";
+        if($this->lyricsFile    != null) $metadataBag .=    " --lyricsFile '"   . $this->lyricsFile     . "'";
+        if($this->composer      != null) $metadataBag .=    " --composer '"     . $this->composer       . "'";
+        if($this->copyright     != null) $metadataBag .=    " --copyright '"    . $this->copyright      . "'";
+        if($this->grouping      != null) $metadataBag .=    " --grouping '"     . $this->grouping       . "'";
+        if($this->artwork       != null) $metadataBag .=    " --artwork '"      . $this->artwork        . "'";
+        if($this->bpm           != null) $metadataBag .=    " --bpm '"          . $this->bpm            . "'";
+        if($this->albumArtist   != null) $metadataBag .=    " --albumArtist '"  . $this->albumArtist    . "'";
+        if($this->compilation   != null) $metadataBag .=    " --compilation '"  . $this->compilation    . "'";
+        if($this->hdvideo       != null) $metadataBag .=    " --hdvideo '"      . $this->hdvideo        . "'";
+        if($this->advisory      != null) $metadataBag .=    " --advisory '"     . $this->advisory       . "'";
+        if($this->stik          != null) $metadataBag .=    " --stik '"         . $this->stik           . "'";
+        if($this->description   != null) $metadataBag .=    " --description '"  . $this->description    . "'";
+        if($this->longdesc      != null) $metadataBag .=    " --longdesc '"     . $this->longdesc       . "'";
+        if($this->storedesc     != null) $metadataBag .=    " --storedesc '"    . $this->storedesc      . "'";
+        if($this->TVNetwork     != null) $metadataBag .=    " --TVNetwork '"    . $this->TVNetwork      . "'";
+        if($this->TVShowName    != null) $metadataBag .=    " --TVShowName '"   . $this->TVShowName     . "'";
+        if($this->TVEpisode     != null) $metadataBag .=    " --TVEpisode '"    . $this->TVEpisode      . "'";
+        if($this->TVSeasonNum   != null) $metadataBag .=    " --TVSeasonNum '"  . $this->TVSeasonNum    . "'";
+        if($this->TVEpisodeNum  != null) $metadataBag .=    " --TVEpisodeNum '" . $this->TVEpisodeNum   . "'";
+        if($this->podcastFlag   != null) $metadataBag .=    " --podcastFlag '"  . $this->podcastFlag    . "'";
+        if($this->category      != null) $metadataBag .=    " --category '"     . $this->category       . "'";
+        if($this->keyword       != null) $metadataBag .=    " --keyword '"      . $this->keyword        . "'";
+        if($this->podcastURL    != null) $metadataBag .=    " --podcastURL '"   . $this->podcastURL     . "'";
+
+        return $metadataBag;
     }
 
     /**
@@ -74,9 +151,9 @@ class AtomicParsleyFile
      */
     public function getTestfile() {
         if($this->isShort())
-            return file_get_contents("web/video/30sec.mp4");
+            return "/var/www/attacker/web/video/30sec.mp4";
 
-        return file_get_contents("web/video/5min.mp4");
+        return "web/video/5min.mp4";
     }
 
     /**
@@ -616,6 +693,22 @@ class AtomicParsleyFile
     public function getPodcastURL()
     {
         return $this->podcastURL;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getShort()
+    {
+        return $this->short;
+    }
+
+    /**
+     * @param mixed $short
+     */
+    public function setShort($short)
+    {
+        $this->short = $short;
     }
 
     /**
