@@ -94,9 +94,9 @@ class AtomicParsleyFile
             else if(strpos($entry, 'Atom "©gen"') !== false)
                 $this->setGenre(substr($entry, 23));
             else if(strpos($entry, 'Atom "trkn"') !== false)
-                $this->setTracknum(substr($entry, 23));     // TODO: max. values? 45575 of 25614 from 111111/222222
+                $this->setTracknum(substr($entry, 22));     // TODO: max. values? 45575 of 25614 from 111111/222222
             else if(strpos($entry, 'Atom "disk"') !== false)
-                $this->setDisk(substr($entry, 23));     // TODO: max. values? 5653 of 51228 from 333333/444444
+                $this->setDisk(substr($entry, 22));     // TODO: wieso 22? // TODO: max. values? 5653 of 51228 from 333333/444444
             else if(strpos($entry, 'Atom "©gen"') !== false)
                 $this->setGenre(substr($entry, 23));
             else if(strpos($entry, 'Atom "©cmt"') !== false)
@@ -108,46 +108,70 @@ class AtomicParsleyFile
             else if(strpos($entry, 'Atom "©wrt"') !== false)
                 $this->setComposer(substr($entry, 23));
             else if(strpos($entry, 'Atom "cprt"') !== false)
-                $this->setCopyright(substr($entry, 23));
+                $this->setCopyright(substr($entry, 22));
             else if(strpos($entry, 'Atom "©grp"') !== false)
                 $this->setGrouping(substr($entry, 23));
             else if(strpos($entry, 'Atom "covr"') !== false)    // TODO: Artwork as URL? FILE-URL?
                 $this->setArtwork(substr($entry, 23));
-            // TODO: BPM
+            else if(strpos($entry, 'Atom "tmpo"') !== false)    // TODO: Artwork as URL? FILE-URL?
+                $this->setBpm(substr($entry, 22));
             else if(strpos($entry, 'Atom "aART"') !== false)
-                $this->setAlbumArtist(substr($entry, 23));
-            // TODO: compilation
-            // TODO: advisory
-            else if(strpos($entry, 'Atom "desc"') !== false)
-                $this->setDescription(substr($entry, 23));
-            else if(strpos($entry, 'Atom "tvnn"') !== false)
-                $this->setTVNetwork(substr($entry, 23));
-            else if(strpos($entry, 'Atom "tvsh"') !== false)
-                $this->setTVShowName(substr($entry, 23));
-            else if(strpos($entry, 'Atom "tven"') !== false)
-                $this->setTVEpisode(substr($entry, 23));
-            else if(strpos($entry, 'Atom "tvsn"') !== false)
-                $this->setTVSeasonNum(substr($entry, 23));      // TODO: max. value? 56881? 777777 set
-            else if(strpos($entry, 'Atom "tves"') !== false)
-                $this->setTVEpisodeNum(substr($entry, 23));     // TODO: max. value? 36920? 888888 set
-            else if(strpos($entry, 'Atom "pcst"') !== false)
-                $this->setPodcastFlag(substr($entry, 23));      // TODO: only boolean?
-            else if(strpos($entry, 'Atom "catg"') !== false)
-                $this->setCategory(substr($entry, 23));
-            else if(strpos($entry, 'Atom "keyw"') !== false)
-                $this->setKeyword(substr($entry, 23));
-            else if(strpos($entry, 'Atom "purl"') !== false)
-                $this->setPodcastURL(substr($entry, 23));
-            else if(strpos($entry, 'Atom "egid"') !== false)
-                $this->setPodcastGUID(substr($entry, 23));
-            else if(strpos($entry, 'Atom "purd"') !== false)
-                $this->setPurchaseDate(substr($entry, 23));
-            else if(strpos($entry, 'Atom "pgap"') !== false)
-                $this->setGapless(substr($entry, 23));     // TODO: only boolean?
+                $this->setAlbumArtist(substr($entry, 22));
+            else if(strpos($entry, 'Atom "cpil"') !== false)
+                $this->setCompilation((boolean) substr($entry, 22));
+            else if(strpos($entry, 'Atom "hdvd"') !== false)
+                $this->setHdvideo((boolean) substr($entry, 22));
             else if(strpos($entry, 'Atom "rtng"') !== false)
-                $this->setContentRating(substr($entry, 23));     // TODO: which values? "Inoffensive" from "vvvvvv"
+                $this->setAdvisory(substr($entry, 22));
+            else if(strpos($entry, 'Atom "stik"') !== false)
+                $this->setStik(substr($entry, 22));
+            else if(strpos($entry, 'Atom "desc"') !== false)
+                $this->setDescription(substr($entry, 22));
+            else if(strpos($entry, 'Atom "ldes"') !== false)
+                $this->setLongdesc(substr($entry, 22));
+            else if(strpos($entry, 'Atom "sdes"') !== false)
+                $this->setStoredesc(substr($entry, 22));
+            else if(strpos($entry, 'Atom "tvnn"') !== false)
+                $this->setTVNetwork(substr($entry, 22));
+            else if(strpos($entry, 'Atom "tvsh"') !== false)
+                $this->setTVShowName(substr($entry, 22));
+            else if(strpos($entry, 'Atom "tven"') !== false)
+                $this->setTVEpisode(substr($entry, 22));
+            else if(strpos($entry, 'Atom "tvsn"') !== false)
+                $this->setTVSeasonNum(substr($entry, 22));      // TODO: max. value? 56881? 777777 set
+            else if(strpos($entry, 'Atom "tves"') !== false)
+                $this->setTVEpisodeNum(substr($entry, 22));     // TODO: max. value? 36920? 888888 set
+            else if(strpos($entry, 'Atom "pcst"') !== false)
+                $this->setPodcastFlag((boolean) substr($entry, 22));      // TODO: only boolean?
+            else if(strpos($entry, 'Atom "catg"') !== false)
+                $this->setCategory(substr($entry, 22));
+            else if(strpos($entry, 'Atom "keyw"') !== false)
+                $this->setKeyword(substr($entry, 22));
+            else if(strpos($entry, 'Atom "purl"') !== false)
+                $this->setPodcastURL(substr($entry, 22));
+            else if(strpos($entry, 'Atom "egid"') !== false)
+                $this->setPodcastGUID(substr($entry, 22));
+            else if(strpos($entry, 'Atom "purd"') !== false)
+                $this->setPurchaseDate(substr($entry, 22));
             else if(strpos($entry, 'Atom "©too"') !== false)
-                $this->setEncodingTool(substr($entry, 23));
+                $this->setEncodingTool(substr($entry, 26));
+            else if(strpos($entry, 'Atom "©enc"') !== false)
+                $this->setEncodedBy(substr($entry, 23));
+            else if(strpos($entry, 'Atom "apID"') !== false)
+                $this->setApID(substr($entry, 22));
+            else if(strpos($entry, 'Atom "apID"') !== false)
+                $this->setApID(substr($entry, 22));
+            else if(strpos($entry, 'Atom "cnID"') !== false)
+                $this->setCnID(substr($entry, 22));
+            else if(strpos($entry, 'Atom "geID"') !== false)
+                $this->setGeID(substr($entry, 22));
+            else if(strpos($entry, 'Atom "xid "') !== false)
+                $this->setXID(substr($entry, 22));
+            else if(strpos($entry, 'Atom "pgap"') !== false)
+                $this->setGapless((boolean) substr($entry, 22));     // TODO: only boolean?
+            else if(strpos($entry, 'Atom "----"') !== false)
+                $this->setContentRating(substr($entry, 12));     // TODO: only boolean?
+
         }
     }
 
@@ -191,11 +215,11 @@ class AtomicParsleyFile
         if($this->comment       != null) $metadataBag .=    " --comment '"      . $this->comment        . "'";
         if($this->year          != null) $metadataBag .=    " --year '"         . $this->year           . "'";
         if($this->lyrics        != null) $metadataBag .=    " --lyrics '"       . $this->lyrics         . "'";
-        if($this->lyricsFile    != null) $metadataBag .=    " --lyricsFile '"   . $this->lyricsFile     . "'";
+//        if($this->lyricsFile    != null) $metadataBag .=    " --lyricsFile '"   . $this->lyricsFile     . "'";
         if($this->composer      != null) $metadataBag .=    " --composer '"     . $this->composer       . "'";
         if($this->copyright     != null) $metadataBag .=    " --copyright '"    . $this->copyright      . "'";
-        if($this->grouping      != null) $metadataBag .=    " --grouping '"     . $this->grouping       . "'";
-        if($this->artwork       != null) $metadataBag .=    " --artwork '"      . $this->artwork        . "'";
+//        if($this->grouping      != null) $metadataBag .=    " --grouping '"     . $this->grouping       . "'";
+//        if($this->artwork       != null) $metadataBag .=    " --artwork '"      . $this->artwork        . "'";
         if($this->bpm           != null) $metadataBag .=    " --bpm '"          . $this->bpm            . "'";
         if($this->albumArtist   != null) $metadataBag .=    " --albumArtist '"  . $this->albumArtist    . "'";
         if($this->compilation   != null) $metadataBag .=    " --compilation '"  . $this->compilation    . "'";
@@ -214,7 +238,7 @@ class AtomicParsleyFile
         if($this->category      != null) $metadataBag .=    " --category '"     . $this->category       . "'";
         if($this->keyword       != null) $metadataBag .=    " --keyword '"      . $this->keyword        . "'";
         if($this->podcastURL    != null) $metadataBag .=    " --podcastURL '"   . $this->podcastURL     . "'";
-        if($this->podcastGUID   != null) $metadataBag .=    " --podcastURL '"   . $this->podcastURL     . "'";
+        if($this->podcastGUID   != null) $metadataBag .=    " --podcastGUID '"  . $this->podcastGUID    . "'";
         if($this->purchaseDate  != null) $metadataBag .=    " --purchaseDate '" . $this->purchaseDate   . "'";
         if($this->encodingTool  != null) $metadataBag .=    " --encodingTool '" . $this->encodingTool   . "'";
         if($this->encodedBy     != null) $metadataBag .=    " --encodedBy '"    . $this->encodedBy      . "'";
@@ -237,7 +261,7 @@ class AtomicParsleyFile
         if($this->isShort())
             return "/var/www/attacker/web/video/30sec.mp4";
 
-        return "web/video/5min.mp4";
+        return "/var/www/attacker/web/video/5min.mp4";
     }
 
     /**
