@@ -141,6 +141,33 @@ class AtomicParsleyFileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("[com.apple.iTunes;iTunEXTC] contains: mpaa|NC-17|500|", $loadedFile->getContentRating());
     }
 
+
+    /** @test */
+    public function the_fuzzer_works_correct()
+    {
+        $this->assertEquals("AAAAA", AtomicParsleyFile::fuzzer(5));
+    }
+
+    /** @test */
+    public function test_max_length_of_title_field()
+    {
+        $length = 256;
+
+        $file = new AtomicParsleyFile();
+        $file->setTitle(AtomicParsleyFile::fuzzer($length));
+        $file->save();
+
+        $loadedFile = new AtomicParsleyFile($file->getFullFilepath());
+
+        $this->assertEquals($file->getTitle(), $loadedFile->getTitle());
+    }
+
+    /** @test */
+    public function function_get_max_length_of_fields_works()
+    {
+        $this->assertEquals(256, AtomicParsleyFile::getMaxLengthOfField("Artist"));
+    }
+
     /**
      * Deletes the directory with the testing files after all tests passed.
      * Code snipped by @alcuadrado on http://stackoverflow.com/questions/3349753/delete-directory-with-files-in-it#3349792

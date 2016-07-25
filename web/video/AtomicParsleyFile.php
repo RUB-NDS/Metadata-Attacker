@@ -113,7 +113,7 @@ class AtomicParsleyFile
                 $this->setGrouping(substr($entry, 23));
             else if(strpos($entry, 'Atom "covr"') !== false)    // TODO: Artwork as URL? FILE-URL?
                 $this->setArtwork(substr($entry, 23));
-            else if(strpos($entry, 'Atom "tmpo"') !== false)    // TODO: Artwork as URL? FILE-URL?
+            else if(strpos($entry, 'Atom "tmpo"') !== false)
                 $this->setBpm(substr($entry, 22));
             else if(strpos($entry, 'Atom "aART"') !== false)
                 $this->setAlbumArtist(substr($entry, 22));
@@ -196,6 +196,16 @@ class AtomicParsleyFile
         return false;
     }
 
+    /**
+     * Returns the video to download in the browser.
+     */
+    public function download() {
+        header("Content-type: video/mp4");
+        header("Content-Disposition:attachment;filename=\"" . $this->getFilename() ."\"");
+        header("Content-length: " . filesize($this->getFullFilepath()) . "\n\n");
+        echo file_get_contents($this->getFullFilepath());
+    }
+
     // Helper functions
 
     /**
@@ -207,7 +217,7 @@ class AtomicParsleyFile
         $metadataBag = "";
 
         if($this->artist        != null) $metadataBag .=    " --artist '"       . $this->artist         . "'";
-        if($this->title         != null) $metadataBag .=    " --title '"        . $this->title          . "'";
+        if($this->title         != null) $metadataBag .=    " --title "        . escapeshellarg($this->title)          . "";
         if($this->album         != null) $metadataBag .=    " --album '"        . $this->album          . "'";
         if($this->genre         != null) $metadataBag .=    " --genre '"        . $this->genre          . "'";
         if($this->tracknum      != null) $metadataBag .=    " --tracknum '"     . $this->tracknum       . "'";
@@ -271,6 +281,56 @@ class AtomicParsleyFile
      */
     public function getFullFilepath() {
         return AtomicParsleyFile::filepath . $this->filename;
+    }
+
+    /**
+     * Deletes the saved file.
+     * TODO: Test if file exists.
+     *
+     * @return bool
+     */
+    public function delete(){
+        if(unlink($this->getFullFilepath()))
+            return true;
+
+        return false;
+    }
+
+    /**
+     * Simple fuzzer to determine the length of a given field.
+     *
+     * @param $length
+     * @return string
+     */
+    public static function fuzzer($length) {
+        $string = "";
+        for ($i=1; $i <= $length; $i++)
+            $string .= "A";
+        return $string;
+    }
+
+    /**
+     * Test how many characters the given field can save with AtomicParsley.
+     *
+     * @param $fieldname
+     * @return int
+     */
+    public static function getMaxLengthOfField($fieldname) {
+        $counter = 0;
+        $setMethod = "set" . ucfirst($fieldname);
+        $getMethod = "get" . ucfirst($fieldname);
+
+        do {
+            $counter++;
+            $file = new AtomicParsleyFile();
+            $file->$setMethod(self::fuzzer($counter));
+            $file->save();
+
+            $loadedFile = new AtomicParsleyFile($file->getFullFilepath());
+            $file->delete();
+        } while (strcmp($file->$getMethod(), $loadedFile->$getMethod()) == 0);
+
+        return $counter - 1;
     }
 
     // Simple Setters
