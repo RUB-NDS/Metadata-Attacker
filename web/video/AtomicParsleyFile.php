@@ -1,5 +1,7 @@
 <?php
 
+// TODO: Beim Einlesen auf UTF-16 achten!
+
 class AtomicParsleyFile
 {
     const filepath = "/tmp/Metadata-Attacker/";
@@ -216,48 +218,48 @@ class AtomicParsleyFile
     protected function getMetadataBag() {
         $metadataBag = "";
 
-        if($this->artist        != null) $metadataBag .=    " --artist '"       . $this->artist         . "'";
-        if($this->title         != null) $metadataBag .=    " --title "        . escapeshellarg($this->title)          . "";
-        if($this->album         != null) $metadataBag .=    " --album '"        . $this->album          . "'";
-        if($this->genre         != null) $metadataBag .=    " --genre '"        . $this->genre          . "'";
-        if($this->tracknum      != null) $metadataBag .=    " --tracknum '"     . $this->tracknum       . "'";
-        if($this->disk          != null) $metadataBag .=    " --disk '"         . $this->disk           . "'";
-        if($this->comment       != null) $metadataBag .=    " --comment '"      . $this->comment        . "'";
-        if($this->year          != null) $metadataBag .=    " --year '"         . $this->year           . "'";
-        if($this->lyrics        != null) $metadataBag .=    " --lyrics '"       . $this->lyrics         . "'";
+        if($this->artist        != null) $metadataBag .=    " --artist "        . escapeshellarg($this->artist);
+        if($this->title         != null) $metadataBag .=    " --title "         . escapeshellarg($this->title);
+        if($this->album         != null) $metadataBag .=    " --album "         . escapeshellarg($this->album);
+        if($this->genre         != null) $metadataBag .=    " --genre "         . escapeshellarg($this->genre);
+        if($this->tracknum      != null) $metadataBag .=    " --tracknum "      . escapeshellarg($this->tracknum);
+        if($this->disk          != null) $metadataBag .=    " --disk "          . escapeshellarg($this->disk           );
+        if($this->comment       != null) $metadataBag .=    " --comment "       . escapeshellarg($this->comment        );
+        if($this->year          != null) $metadataBag .=    " --year "          . escapeshellarg($this->year           );
+        if($this->lyrics        != null) $metadataBag .=    " --lyrics "        . escapeshellarg($this->lyrics         );
 //        if($this->lyricsFile    != null) $metadataBag .=    " --lyricsFile '"   . $this->lyricsFile     . "'";
-        if($this->composer      != null) $metadataBag .=    " --composer '"     . $this->composer       . "'";
-        if($this->copyright     != null) $metadataBag .=    " --copyright '"    . $this->copyright      . "'";
+        if($this->composer      != null) $metadataBag .=    " --composer "      . escapeshellarg($this->composer       );
+        if($this->copyright     != null) $metadataBag .=    " --copyright "     . escapeshellarg($this->copyright      );
 //        if($this->grouping      != null) $metadataBag .=    " --grouping '"     . $this->grouping       . "'";
 //        if($this->artwork       != null) $metadataBag .=    " --artwork '"      . $this->artwork        . "'";
-        if($this->bpm           != null) $metadataBag .=    " --bpm '"          . $this->bpm            . "'";
-        if($this->albumArtist   != null) $metadataBag .=    " --albumArtist '"  . $this->albumArtist    . "'";
-        if($this->compilation   != null) $metadataBag .=    " --compilation '"  . $this->compilation    . "'";
-        if($this->hdvideo       != null) $metadataBag .=    " --hdvideo '"      . $this->hdvideo        . "'";
-        if($this->advisory      != null) $metadataBag .=    " --advisory '"     . $this->advisory       . "'";
-        if($this->stik          != null) $metadataBag .=    " --stik '"         . $this->stik           . "'";
-        if($this->description   != null) $metadataBag .=    " --description '"  . $this->description    . "'";
-        if($this->longdesc      != null) $metadataBag .=    " --longdesc '"     . $this->longdesc       . "'";
-        if($this->storedesc     != null) $metadataBag .=    " --storedesc '"    . $this->storedesc      . "'";
-        if($this->TVNetwork     != null) $metadataBag .=    " --TVNetwork '"    . $this->TVNetwork      . "'";
-        if($this->TVShowName    != null) $metadataBag .=    " --TVShowName '"   . $this->TVShowName     . "'";
-        if($this->TVEpisode     != null) $metadataBag .=    " --TVEpisode '"    . $this->TVEpisode      . "'";
-        if($this->TVSeasonNum   != null) $metadataBag .=    " --TVSeasonNum '"  . $this->TVSeasonNum    . "'";
-        if($this->TVEpisodeNum  != null) $metadataBag .=    " --TVEpisodeNum '" . $this->TVEpisodeNum   . "'";
-        if($this->podcastFlag   != null) $metadataBag .=    " --podcastFlag '"  . $this->podcastFlag    . "'";
-        if($this->category      != null) $metadataBag .=    " --category '"     . $this->category       . "'";
-        if($this->keyword       != null) $metadataBag .=    " --keyword '"      . $this->keyword        . "'";
-        if($this->podcastURL    != null) $metadataBag .=    " --podcastURL '"   . $this->podcastURL     . "'";
-        if($this->podcastGUID   != null) $metadataBag .=    " --podcastGUID '"  . $this->podcastGUID    . "'";
-        if($this->purchaseDate  != null) $metadataBag .=    " --purchaseDate '" . $this->purchaseDate   . "'";
-        if($this->encodingTool  != null) $metadataBag .=    " --encodingTool '" . $this->encodingTool   . "'";
-        if($this->encodedBy     != null) $metadataBag .=    " --encodedBy '"    . $this->encodedBy      . "'";
-        if($this->apID          != null) $metadataBag .=    " --apID '"         . $this->apID           . "'";
-        if($this->cnID          != null) $metadataBag .=    " --cnID '"         . $this->cnID           . "'";
-        if($this->geID          != null) $metadataBag .=    " --geID '"         . $this->geID           . "'";
-        if($this->xID           != null) $metadataBag .=    " --xID '"          . $this->xID            . "'";
-        if($this->gapless       != null) $metadataBag .=    " --gapless '"      . $this->gapless        . "'";
-        if($this->contentRating != null) $metadataBag .=    " --contentRating '". $this->contentRating  . "'";
+        if($this->bpm           != null) $metadataBag .=    " --bpm "           . escapeshellarg($this->bpm            );
+        if($this->albumArtist   != null) $metadataBag .=    " --albumArtist "   . escapeshellarg($this->albumArtist    );
+        if($this->compilation   != null) $metadataBag .=    " --compilation "   . escapeshellarg($this->compilation    );
+        if($this->hdvideo       != null) $metadataBag .=    " --hdvideo "       . escapeshellarg($this->hdvideo        );
+        if($this->advisory      != null) $metadataBag .=    " --advisory "      . escapeshellarg($this->advisory       );
+        if($this->stik          != null) $metadataBag .=    " --stik "          . escapeshellarg($this->stik           );
+        if($this->description   != null) $metadataBag .=    " --description "   . escapeshellarg($this->description    );
+        if($this->longdesc      != null) $metadataBag .=    " --longdesc "      . escapeshellarg($this->longdesc       );
+        if($this->storedesc     != null) $metadataBag .=    " --storedesc "     . escapeshellarg($this->storedesc      );
+        if($this->TVNetwork     != null) $metadataBag .=    " --TVNetwork "     . escapeshellarg($this->TVNetwork      );
+        if($this->TVShowName    != null) $metadataBag .=    " --TVShowName "    . escapeshellarg($this->TVShowName     );
+        if($this->TVEpisode     != null) $metadataBag .=    " --TVEpisode "     . escapeshellarg($this->TVEpisode      );
+        if($this->TVSeasonNum   != null) $metadataBag .=    " --TVSeasonNum "   . escapeshellarg($this->TVSeasonNum    );
+        if($this->TVEpisodeNum  != null) $metadataBag .=    " --TVEpisodeNum "  . escapeshellarg($this->TVEpisodeNum   );
+        if($this->podcastFlag   != null) $metadataBag .=    " --podcastFlag "   . escapeshellarg($this->podcastFlag    );
+        if($this->category      != null) $metadataBag .=    " --category "      . escapeshellarg($this->category       );
+        if($this->keyword       != null) $metadataBag .=    " --keyword "       . escapeshellarg($this->keyword        );
+        if($this->podcastURL    != null) $metadataBag .=    " --podcastURL "    . escapeshellarg($this->podcastURL     );
+        if($this->podcastGUID   != null) $metadataBag .=    " --podcastGUID "   . escapeshellarg($this->podcastGUID    );
+        if($this->purchaseDate  != null) $metadataBag .=    " --purchaseDate "  . escapeshellarg($this->purchaseDate   );
+        if($this->encodingTool  != null) $metadataBag .=    " --encodingTool "  . escapeshellarg($this->encodingTool   );
+        if($this->encodedBy     != null) $metadataBag .=    " --encodedBy "     . escapeshellarg($this->encodedBy      );
+        if($this->apID          != null) $metadataBag .=    " --apID "          . escapeshellarg($this->apID           );
+        if($this->cnID          != null) $metadataBag .=    " --cnID "          . escapeshellarg($this->cnID           );
+        if($this->geID          != null) $metadataBag .=    " --geID "          . escapeshellarg($this->geID           );
+        if($this->xID           != null) $metadataBag .=    " --xID "           . escapeshellarg($this->xID            );
+        if($this->gapless       != null) $metadataBag .=    " --gapless "       . escapeshellarg($this->gapless        );
+        if($this->contentRating != null) $metadataBag .=    " --contentRating " . escapeshellarg($this->contentRating  );
 
         return $metadataBag;
     }
@@ -320,6 +322,8 @@ class AtomicParsleyFile
         $setMethod = "set" . ucfirst($fieldname);
         $getMethod = "get" . ucfirst($fieldname);
 
+        if (ucfirst($fieldname) == "Longdesc") $counter = 130924;
+
         do {
             $counter++;
             $file = new AtomicParsleyFile();
@@ -331,6 +335,52 @@ class AtomicParsleyFile
         } while (strcmp($file->$getMethod(), $loadedFile->$getMethod()) == 0);
 
         return $counter - 1;
+    }
+
+    public static function printMaxFieldValueSizesTable() {
+        $output = "<table class='table table-hover'>";
+        $output .= "<tr><th>Fieldname</th><th>Command Argument</th><th>Max Size in Chars</th></tr>";
+        $output .= "<tr><td>Artist</td><td>--artist</td><td>" .self::getMaxLengthOfField("artist") . "</td></tr>";
+        $output .= "<tr><td>Title</td><td>--title</td><td>" .self::getMaxLengthOfField("Title") . "</td></tr>";
+        $output .= "<tr><td>Album</td><td>--album</td><td>" .self::getMaxLengthOfField("Album") . "</td></tr>";
+        $output .= "<tr><td>Genre</td><td>--genre</td><td>" .self::getMaxLengthOfField("Genre") . "</td></tr>";
+        $output .= "<tr><td>Tracknum</td><td>--tracknum</td><td>" .self::getMaxLengthOfField("Tracknum") . "</td></tr>";
+        $output .= "<tr><td>Disk</td><td>--disk</td><td>" .self::getMaxLengthOfField("Disk") . "</td></tr>";
+        $output .= "<tr><td>Comment</td><td>--comment</td><td>" .self::getMaxLengthOfField("Comment") . "</td></tr>";
+        $output .= "<tr><td>Year</td><td>--year</td><td>" .self::getMaxLengthOfField("Year") . "</td></tr>";
+        $output .= "<tr><td>Composer</td><td>--composer</td><td>" .self::getMaxLengthOfField("Composer") . "</td></tr>";
+        $output .= "<tr><td>Copyright</td><td>--copyright</td><td>" .self::getMaxLengthOfField("Copyright") . "</td></tr>";
+        $output .= "<tr><td>Bpm</td><td>--bpm</td><td>" .self::getMaxLengthOfField("Bpm") . "</td></tr>";
+        $output .= "<tr><td>AlbumArtist</td><td>--albumArtist</td><td>" .self::getMaxLengthOfField("AlbumArtist") . "</td></tr>";
+        $output .= "<tr><td>Compilation</td><td>--compilation</td><td>" .self::getMaxLengthOfField("Compilation") . "</td></tr>";
+        $output .= "<tr><td>Hdvideo</td><td>--hdvideo</td><td>" .self::getMaxLengthOfField("Hdvideo") . "</td></tr>";
+        $output .= "<tr><td>Advisory</td><td>--advisory</td><td>" .self::getMaxLengthOfField("Advisory") . "</td></tr>";
+        $output .= "<tr><td>Stik</td><td>--stik</td><td>" .self::getMaxLengthOfField("Stik") . "</td></tr>";
+        $output .= "<tr><td>Description</td><td>--description</td><td>" .self::getMaxLengthOfField("Description") . "</td></tr>";
+//        $output .= "<tr><td>Longdesc</td><td>--longdesc</td><td>" .self::getMaxLengthOfField("Longdesc") . "</td></tr>";
+//        $output .= "<tr><td>Storedesc</td><td>--storedesc</td><td>" .self::getMaxLengthOfField("Storedesc") . "</td></tr>";
+        $output .= "<tr><td>TVNetwork</td><td>--TVNetwork</td><td>" .self::getMaxLengthOfField("TVNetwork") . "</td></tr>";
+        $output .= "<tr><td>TVShowName</td><td>--TVShowName</td><td>" .self::getMaxLengthOfField("TVShowName") . "</td></tr>";
+        $output .= "<tr><td>TVEpisode</td><td>--TVEpisode</td><td>" .self::getMaxLengthOfField("TVEpisode") . "</td></tr>";
+        $output .= "<tr><td>TVSeasonNum</td><td>--TVSeasonNum</td><td>" .self::getMaxLengthOfField("TVSeasonNum") . "</td></tr>";
+        $output .= "<tr><td>TVEpisodeNum</td><td>--TVEpisodeNum</td><td>" .self::getMaxLengthOfField("TVEpisodeNum") . "</td></tr>";
+        $output .= "<tr><td>PodcastFlag</td><td>--podcastFlag</td><td>" .self::getMaxLengthOfField("podcastFlag") . "</td></tr>";
+        $output .= "<tr><td>Category</td><td>--category</td><td>" .self::getMaxLengthOfField("Category") . "</td></tr>";
+        $output .= "<tr><td>Keyword</td><td>--keyword</td><td>" .self::getMaxLengthOfField("Keyword") . "</td></tr>";
+        $output .= "<tr><td>PodcastURL</td><td>--podcastURL</td><td>" .self::getMaxLengthOfField("PodcastURL") . "</td></tr>";
+        $output .= "<tr><td>PodcastGUID</td><td>--podcastGUID</td><td>" .self::getMaxLengthOfField("PodcastGUID") . "</td></tr>";
+        $output .= "<tr><td>PurchaseDate</td><td>--purchaseDate</td><td>" .self::getMaxLengthOfField("PurchaseDate") . "</td></tr>";
+        $output .= "<tr><td>EncodingTool</td><td>--encodingTool</td><td>" .self::getMaxLengthOfField("EncodingTool") . "</td></tr>";
+        $output .= "<tr><td>EncodedBy</td><td>--encodedBy</td><td>" .self::getMaxLengthOfField("EncodedBy") . "</td></tr>";
+        $output .= "<tr><td>apID</td><td>--apID</td><td>" .self::getMaxLengthOfField("apID") . "</td></tr>";
+        $output .= "<tr><td>cnID</td><td>--cnID</td><td>" .self::getMaxLengthOfField("cnID") . "</td></tr>";
+        $output .= "<tr><td>geID</td><td>--geID</td><td>" .self::getMaxLengthOfField("geID") . "</td></tr>";
+        $output .= "<tr><td>xID</td><td>--xID</td><td>" .self::getMaxLengthOfField("xID") . "</td></tr>";
+        $output .= "<tr><td>Gapless</td><td>--gapless</td><td>" .self::getMaxLengthOfField("Gapless") . "</td></tr>";
+        $output .= "<tr><td>ContentRating</td><td>--contentRating</td><td>" .self::getMaxLengthOfField("ContentRating") . "</td></tr>";
+        $output .= "</table>";
+
+        echo $output;
     }
 
     // Simple Setters
@@ -1046,6 +1096,7 @@ class AtomicParsleyFile
     {
         $this->xID = $xID;
     }
+
 
 
 }
