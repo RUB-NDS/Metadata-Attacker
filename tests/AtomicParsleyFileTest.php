@@ -141,6 +141,33 @@ class AtomicParsleyFileTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("[com.apple.iTunes;iTunEXTC] contains: mpaa|NC-17|500|", $loadedFile->getContentRating());
     }
 
+    /** @test */
+    public function the_user_can_enter_special_char_in_album_field()
+    {
+        $file = new AtomicParsleyFile();
+        $file->setAlbum("Here's a special char.");
+        $file->save();
+
+        $loadedFile = new AtomicParsleyFile($file->getFullFilepath());
+
+        $this->assertEquals("Here's a special char.", $loadedFile->getAlbum());
+    }
+
+    /** @test */
+    public function the_user_can_enter_much_text_in_longdesc_field()
+    {
+        $content = iconv('UTF-16', 'UTF-16', file_get_contents('/var/www/attacker/web/video/xss.txt'));
+
+
+
+        $file = new AtomicParsleyFile();
+        $file->setLongdesc($content);
+        $file->save();
+
+        $loadedFile = new AtomicParsleyFile($file->getFullFilepath());
+
+        $this->assertEquals($content, iconv('UTF-16', 'UTF-16', $loadedFile->getLongdesc()));
+    }
 
     /** @test */
     public function the_fuzzer_works_correct()
@@ -151,10 +178,11 @@ class AtomicParsleyFileTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function test_max_length_of_title_field()
     {
-        $length = 256;
+         // $length = 130924; // Longdesc
+//        $length = 130923; // storedesc
 
         $file = new AtomicParsleyFile();
-        $file->setTitle(AtomicParsleyFile::fuzzer($length));
+        $file->setTitle(AtomicParsleyFile::fuzzer(50));
         $file->save();
 
         $loadedFile = new AtomicParsleyFile($file->getFullFilepath());
