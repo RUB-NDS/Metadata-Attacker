@@ -17,6 +17,7 @@ services:
 ### PHP-FPM Container #######################################
     php-fpm:
         build: ./docker/php-fpm
+        command: bash -c "composer install && php-fpm"
         volumes_from:
             - storage
         expose:

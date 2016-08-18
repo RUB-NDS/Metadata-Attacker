@@ -4,6 +4,7 @@ MAINTAINER Sascha Brendel <sascha.brendel@ruhr-uni-bochum.de>
 
 ADD ./web.ini /usr/local/etc/php/conf.d
 ADD ./web.pool.conf /usr/local/etc/php-fpm.d/
+ADD ./get-composer.sh /usr/local/bin
 
 #Install necessary tools and components
 RUN apt-get update && apt-get install -y \
@@ -29,6 +30,13 @@ RUN wget https://phar.phpunit.de/phpunit.phar \
 	&& chmod +x phpunit.phar \
 	&& mv phpunit.phar /usr/local/bin/phpunit \
 	&& phpunit --version
+
+# Download and install composer
+RUN cd /usr/local/bin \
+	&& bash ./get-composer.sh \
+	&& mv composer.phar composer \
+	&& chmod +x composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN usermod -u 1000 www-data
 WORKDIR /var/www/attacker
