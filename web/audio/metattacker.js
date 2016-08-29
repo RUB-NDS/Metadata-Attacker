@@ -5,7 +5,7 @@ $("document").ready(function () {
         $("#v2_download_button").button("loading");
 
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", "noot_no_ID3.mp3", true);
+        xhr.open("GET", "/audio/noot_no_ID3.mp3", true);
         xhr.responseType = "blob"; // response is binary data
 
         xhr.onerror = function () { // workaround if used locally because chrome forbids access to local files
@@ -79,7 +79,7 @@ $("document").ready(function () {
 
     $("#pastePayload").click(function () {
         if (bigPayload === "") {
-            jQuery.get("bigPayload.txt", function (response) {
+            jQuery.get("/audio/bigPayload.txt", function (response) {
                 bigPayload = response;
                 $("#v2payload").val(bigPayload);
             }, "text").fail(function () {

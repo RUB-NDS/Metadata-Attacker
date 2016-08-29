@@ -1,0 +1,105 @@
+/**
+  * Original part by @derctwr
+  */
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    overflow-y: scroll;
+}
+
+a {
+    cursor: pointer;
+}
+
+a i {
+    font-size: 65%;
+}
+
+button {
+    margin-top: 1px;
+}
+
+.jumbotron {
+    padding-top: 15px;
+    padding-bottom: 20px;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+#v1payload {
+    max-width: 100%;
+}
+
+#v2payload {
+    max-width: 100%;
+}
+
+#v2select, #videoSelectBox {
+    height: 14em;
+    font-family: monospace;
+}
+
+.orange {
+    color: #f0ad4e;
+}
+
+.grey {
+    color: #999;
+}
+
+/**
+  * New code by @Lednerb
+  */
+
+body {
+    margin-top: 30px;
+}
+
+.jumbotron h1 {
+    font-size: 56px;
+}
+
+.nav-tabs.nav-justified > li > a {
+    font-size: 15pt;
+}
+
+.tab-content {
+    margin: 30px 0 100px;
+}
+
+li a .glyphicon {
+    font-size: 16pt;
+}
+
+.footer-text {
+    float: left;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 16px;
+    line-height: 20px;
+}
+
+

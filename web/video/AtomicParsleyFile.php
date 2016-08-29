@@ -44,7 +44,7 @@ class AtomicParsleyFile
     protected $podcastURL;
     protected $podcastGUID;
     protected $purchaseDate;
-    protected $encodingTool; // TODO: Sinnvoll? Video dadurch noch abspielbar?
+    protected $encodingTool;
     protected $encodedBy;
     protected $apID;
     protected $cnID;
@@ -60,7 +60,8 @@ class AtomicParsleyFile
     public function __construct($loadFileFromPath = null)
     {
         $this->filename = md5(microtime()) . ".mp4";
-        $this->setAlbum("Standard");
+        // TODO: Remove Standard value / ERROR if missing :-(
+        $this->setEncodedBy("Metadata-Attacker");
 
         // Load file information if a file is specified.
         if($loadFileFromPath != null) {
@@ -173,7 +174,6 @@ class AtomicParsleyFile
                 $this->setGapless((boolean) substr($entry, 22));     // TODO: only boolean?
             else if(strpos($entry, 'Atom "----"') !== false)
                 $this->setContentRating(substr($entry, 12));     // TODO: only boolean?
-
         }
     }
 
@@ -192,7 +192,7 @@ class AtomicParsleyFile
             " -o " . $this->getFullFilepath()
         );
 
-        if($success !== false)
+        if(($success !== false) && filesize($this->getFullFilepath()) > 100)
             return true;
 
         return false;
@@ -273,7 +273,7 @@ class AtomicParsleyFile
         if($this->isShort())
             return "/var/www/attacker/web/video/30sec.mp4";
 
-        return "/var/www/attacker/web/video/5min.mp4";
+        return "/var/www/attacker/web/video/10min.mp4";
     }
 
     /**
@@ -286,14 +286,14 @@ class AtomicParsleyFile
     }
 
     /**
-     * Deletes the saved file.
-     * TODO: Test if file exists.
+     * Deletes a saved file.
      *
      * @return bool
      */
     public function delete(){
-        if(unlink($this->getFullFilepath()))
-            return true;
+        if(file_exists($this->getFullFilepath()))
+            if(unlink($this->getFullFilepath()))
+                return true;
 
         return false;
     }
