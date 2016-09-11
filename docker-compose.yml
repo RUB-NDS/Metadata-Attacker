@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+
+### Nginx Server Container ##################################
+    nginx:
+        build: ./docker/nginx
+        volumes_from:
+            - storage
+        volumes:
+            - ./logs/nginx/:/var/log/nginx
+        ports:
+            - "80:80" # Config port for reverse proxy setup
+        links:
+            - php-fpm
+
+### PHP-FPM Container #######################################
+    php-fpm:
+        build: ./docker/php-fpm
+        command: bash -c "composer install && php-fpm"
+        volumes_from:
+            - storage
+        expose:
+            - "9000"
+
+### Storage Container ######################
+    storage:
+        build: ./docker/storage
+        volumes:
+            - .:/var/www/attacker
