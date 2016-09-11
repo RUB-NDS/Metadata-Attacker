@@ -14,22 +14,14 @@ class AtomicParsleyFile
     protected $title;
     protected $album;
     protected $genre;
-    protected $tracknum;
-    protected $disk;
     protected $comment;
     protected $year;
     protected $lyrics;
-    protected $lyricsFile;
     protected $composer;
     protected $copyright;
     protected $grouping;
     protected $artwork;
-    protected $bpm;
     protected $albumArtist;
-    protected $compilation;
-    protected $hdvideo;
-    protected $advisory;
-    protected $stik;
     protected $description;
     protected $longdesc;
     protected $storedesc;
@@ -38,20 +30,14 @@ class AtomicParsleyFile
     protected $TVEpisode;
     protected $TVSeasonNum;
     protected $TVEpisodeNum;
-    protected $podcastFlag;
     protected $category;
     protected $keyword;
-    protected $podcastURL;
-    protected $podcastGUID;
     protected $purchaseDate;
     protected $encodingTool;
     protected $encodedBy;
     protected $apID;
-    protected $cnID;
-    protected $geID;
     protected $xID;
-    protected $gapless;
-    protected $contentRating;
+
 
     /**
      * AtomicParsleyFile constructor.
@@ -60,7 +46,6 @@ class AtomicParsleyFile
     public function __construct($loadFileFromPath = null)
     {
         $this->filename = md5(microtime()) . ".mp4";
-        // TODO: Remove Standard value / ERROR if missing :-(
         $this->setEncodedBy("Metadata-Attacker");
 
         // Load file information if a file is specified.
@@ -78,6 +63,10 @@ class AtomicParsleyFile
                 throw new ErrorException("The given file does not exist.");
         }
 
+        // Delete old files (older than 5 minutes)
+        foreach (glob(AtomicParsleyFile::filepath."*") as $file)
+            if (filemtime($file) < time() - 300)
+                unlink($file);
     }
 
     /**
@@ -96,15 +85,11 @@ class AtomicParsleyFile
                 $this->setAlbum(substr($entry, 23));
             else if(strpos($entry, 'Atom "©gen"') !== false)
                 $this->setGenre(substr($entry, 23));
-            else if(strpos($entry, 'Atom "trkn"') !== false)
-                $this->setTracknum(substr($entry, 22));     // TODO: max. values? 45575 of 25614 from 111111/222222
-            else if(strpos($entry, 'Atom "disk"') !== false)
-                $this->setDisk(substr($entry, 22));     // TODO: wieso 22? // TODO: max. values? 5653 of 51228 from 333333/444444
             else if(strpos($entry, 'Atom "©gen"') !== false)
                 $this->setGenre(substr($entry, 23));
             else if(strpos($entry, 'Atom "©cmt"') !== false)
                 $this->setComment(substr($entry, 23));
-            else if(strpos($entry, 'Atom "©day"') !== false)    // TODO: Check @day == year ???
+            else if(strpos($entry, 'Atom "©day"') !== false)    
                 $this->setYear(substr($entry, 23));
             else if(strpos($entry, 'Atom "©lyr"') !== false)
                 $this->setLyrics(substr($entry, 23));
@@ -112,22 +97,8 @@ class AtomicParsleyFile
                 $this->setComposer(substr($entry, 23));
             else if(strpos($entry, 'Atom "cprt"') !== false)
                 $this->setCopyright(substr($entry, 22));
-            else if(strpos($entry, 'Atom "©grp"') !== false)
-                $this->setGrouping(substr($entry, 23));
-            else if(strpos($entry, 'Atom "covr"') !== false)    // TODO: Artwork as URL? FILE-URL?
-                $this->setArtwork(substr($entry, 23));
-            else if(strpos($entry, 'Atom "tmpo"') !== false)
-                $this->setBpm(substr($entry, 22));
             else if(strpos($entry, 'Atom "aART"') !== false)
                 $this->setAlbumArtist(substr($entry, 22));
-            else if(strpos($entry, 'Atom "cpil"') !== false)
-                $this->setCompilation((boolean) substr($entry, 22));
-            else if(strpos($entry, 'Atom "hdvd"') !== false)
-                $this->setHdvideo((boolean) substr($entry, 22));
-            else if(strpos($entry, 'Atom "rtng"') !== false)
-                $this->setAdvisory(substr($entry, 22));
-            else if(strpos($entry, 'Atom "stik"') !== false)
-                $this->setStik(substr($entry, 22));
             else if(strpos($entry, 'Atom "desc"') !== false)
                 $this->setDescription(substr($entry, 22));
             else if(strpos($entry, 'Atom "ldes"') !== false)
@@ -140,20 +111,10 @@ class AtomicParsleyFile
                 $this->setTVShowName(substr($entry, 22));
             else if(strpos($entry, 'Atom "tven"') !== false)
                 $this->setTVEpisode(substr($entry, 22));
-            else if(strpos($entry, 'Atom "tvsn"') !== false)
-                $this->setTVSeasonNum(substr($entry, 22));      // TODO: max. value? 56881? 777777 set
-            else if(strpos($entry, 'Atom "tves"') !== false)
-                $this->setTVEpisodeNum(substr($entry, 22));     // TODO: max. value? 36920? 888888 set
-            else if(strpos($entry, 'Atom "pcst"') !== false)
-                $this->setPodcastFlag((boolean) substr($entry, 22));      // TODO: only boolean?
             else if(strpos($entry, 'Atom "catg"') !== false)
                 $this->setCategory(substr($entry, 22));
             else if(strpos($entry, 'Atom "keyw"') !== false)
                 $this->setKeyword(substr($entry, 22));
-            else if(strpos($entry, 'Atom "purl"') !== false)
-                $this->setPodcastURL(substr($entry, 22));
-            else if(strpos($entry, 'Atom "egid"') !== false)
-                $this->setPodcastGUID(substr($entry, 22));
             else if(strpos($entry, 'Atom "purd"') !== false)
                 $this->setPurchaseDate(substr($entry, 22));
             else if(strpos($entry, 'Atom "©too"') !== false)
@@ -162,18 +123,8 @@ class AtomicParsleyFile
                 $this->setEncodedBy(substr($entry, 23));
             else if(strpos($entry, 'Atom "apID"') !== false)
                 $this->setApID(substr($entry, 22));
-            else if(strpos($entry, 'Atom "apID"') !== false)
-                $this->setApID(substr($entry, 22));
-            else if(strpos($entry, 'Atom "cnID"') !== false)
-                $this->setCnID(substr($entry, 22));
-            else if(strpos($entry, 'Atom "geID"') !== false)
-                $this->setGeID(substr($entry, 22));
             else if(strpos($entry, 'Atom "xid "') !== false)
                 $this->setXID(substr($entry, 22));
-            else if(strpos($entry, 'Atom "pgap"') !== false)
-                $this->setGapless((boolean) substr($entry, 22));     // TODO: only boolean?
-            else if(strpos($entry, 'Atom "----"') !== false)
-                $this->setContentRating(substr($entry, 12));     // TODO: only boolean?
         }
     }
 
@@ -186,14 +137,31 @@ class AtomicParsleyFile
         if(! file_exists(AtomicParsleyFile::filepath))
             mkdir(AtomicParsleyFile::filepath);
 
+        // First take the correct file and save it with the artwork
+        $this->filename = md5(microtime()) . ".mp4";
         $success = exec("AtomicParsley " .
             $this->getTestfile() .
-            $this->getMetadataBag() .
+            " --artwork /var/www/attacker/web/video/artwork.jpg" .
             " -o " . $this->getFullFilepath()
         );
+        if(($success !== false) && filesize($this->getFullFilepath()) > 100){
 
-        if(($success !== false) && filesize($this->getFullFilepath()) > 100)
+            foreach ($this->getMetadataBag() as $key => $value) {
+                $oldFilepath = $this->getFullFilepath();
+                $this->filename = md5(microtime()) . ".mp4";
+                $success = exec("AtomicParsley " .
+                    $oldFilepath .
+                    $key . " " . $value .
+                    // $key . " \"$(cat " . $dummyValueFilepath . ")\"".
+                    " -o " . $this->getFullFilepath()
+                );
+                if ($success === false) 
+                    return false;
+            }
+
             return true;
+        }
+
 
         return false;
     }
@@ -216,50 +184,34 @@ class AtomicParsleyFile
      * @return string
      */
     protected function getMetadataBag() {
-        $metadataBag = "";
+        $metadataBag = array();
 
-        if($this->artist        != null) $metadataBag .=    " --artist "        . escapeshellarg($this->artist);
-        if($this->title         != null) $metadataBag .=    " --title "         . escapeshellarg($this->title);
-        if($this->album         != null) $metadataBag .=    " --album "         . escapeshellarg($this->album);
-        if($this->genre         != null) $metadataBag .=    " --genre "         . escapeshellarg($this->genre);
-        if($this->tracknum      != null) $metadataBag .=    " --tracknum "      . escapeshellarg($this->tracknum);
-        if($this->disk          != null) $metadataBag .=    " --disk "          . escapeshellarg($this->disk           );
-        if($this->comment       != null) $metadataBag .=    " --comment "       . escapeshellarg($this->comment        );
-        if($this->year          != null) $metadataBag .=    " --year "          . escapeshellarg($this->year           );
-        if($this->lyrics        != null) $metadataBag .=    " --lyrics "        . escapeshellarg($this->lyrics         );
-//        if($this->lyricsFile    != null) $metadataBag .=    " --lyricsFile '"   . $this->lyricsFile     . "'";
-        if($this->composer      != null) $metadataBag .=    " --composer "      . escapeshellarg($this->composer       );
-        if($this->copyright     != null) $metadataBag .=    " --copyright "     . escapeshellarg($this->copyright      );
-//        if($this->grouping      != null) $metadataBag .=    " --grouping '"     . $this->grouping       . "'";
-//        if($this->artwork       != null) $metadataBag .=    " --artwork '"      . $this->artwork        . "'";
-        if($this->bpm           != null) $metadataBag .=    " --bpm "           . escapeshellarg($this->bpm            );
-        if($this->albumArtist   != null) $metadataBag .=    " --albumArtist "   . escapeshellarg($this->albumArtist    );
-        if($this->compilation   != null) $metadataBag .=    " --compilation "   . escapeshellarg($this->compilation    );
-        if($this->hdvideo       != null) $metadataBag .=    " --hdvideo "       . escapeshellarg($this->hdvideo        );
-        if($this->advisory      != null) $metadataBag .=    " --advisory "      . escapeshellarg($this->advisory       );
-        if($this->stik          != null) $metadataBag .=    " --stik "          . escapeshellarg($this->stik           );
-        if($this->description   != null) $metadataBag .=    " --description "   . escapeshellarg($this->description    );
-        if($this->longdesc      != null) $metadataBag .=    " --longdesc "      . escapeshellarg($this->longdesc       );
-        if($this->storedesc     != null) $metadataBag .=    " --storedesc "     . escapeshellarg($this->storedesc      );
-        if($this->TVNetwork     != null) $metadataBag .=    " --TVNetwork "     . escapeshellarg($this->TVNetwork      );
-        if($this->TVShowName    != null) $metadataBag .=    " --TVShowName "    . escapeshellarg($this->TVShowName     );
-        if($this->TVEpisode     != null) $metadataBag .=    " --TVEpisode "     . escapeshellarg($this->TVEpisode      );
-        if($this->TVSeasonNum   != null) $metadataBag .=    " --TVSeasonNum "   . escapeshellarg($this->TVSeasonNum    );
-        if($this->TVEpisodeNum  != null) $metadataBag .=    " --TVEpisodeNum "  . escapeshellarg($this->TVEpisodeNum   );
-        if($this->podcastFlag   != null) $metadataBag .=    " --podcastFlag "   . escapeshellarg($this->podcastFlag    );
-        if($this->category      != null) $metadataBag .=    " --category "      . escapeshellarg($this->category       );
-        if($this->keyword       != null) $metadataBag .=    " --keyword "       . escapeshellarg($this->keyword        );
-        if($this->podcastURL    != null) $metadataBag .=    " --podcastURL "    . escapeshellarg($this->podcastURL     );
-        if($this->podcastGUID   != null) $metadataBag .=    " --podcastGUID "   . escapeshellarg($this->podcastGUID    );
-        if($this->purchaseDate  != null) $metadataBag .=    " --purchaseDate "  . escapeshellarg($this->purchaseDate   );
-        if($this->encodingTool  != null) $metadataBag .=    " --encodingTool "  . escapeshellarg($this->encodingTool   );
-        if($this->encodedBy     != null) $metadataBag .=    " --encodedBy "     . escapeshellarg($this->encodedBy      );
-        if($this->apID          != null) $metadataBag .=    " --apID "          . escapeshellarg($this->apID           );
-        if($this->cnID          != null) $metadataBag .=    " --cnID "          . escapeshellarg($this->cnID           );
-        if($this->geID          != null) $metadataBag .=    " --geID "          . escapeshellarg($this->geID           );
-        if($this->xID           != null) $metadataBag .=    " --xID "           . escapeshellarg($this->xID            );
-        if($this->gapless       != null) $metadataBag .=    " --gapless "       . escapeshellarg($this->gapless        );
-        if($this->contentRating != null) $metadataBag .=    " --contentRating " . escapeshellarg($this->contentRating  );
+        if($this->artist        != null) $metadataBag[" --artist "        ] =  escapeshellarg($this->artist);
+        if($this->title         != null) $metadataBag[" --title "         ] =  escapeshellarg($this->title);
+        if($this->album         != null) $metadataBag[" --album "         ] =  escapeshellarg($this->album);
+        if($this->genre         != null) $metadataBag[" --genre "         ] =  escapeshellarg($this->genre);
+        if($this->tracknum      != null) $metadataBag[" --tracknum "      ] =  escapeshellarg($this->tracknum);
+        if($this->comment       != null) $metadataBag[" --comment "       ] =  escapeshellarg($this->comment        );
+        if($this->year          != null) $metadataBag[" --year "          ] =  escapeshellarg($this->year           );
+        if($this->lyrics        != null) $metadataBag[" --lyrics "        ] =  escapeshellarg($this->lyrics         );
+        if($this->composer      != null) $metadataBag[" --composer "      ] =  escapeshellarg($this->composer       );
+        if($this->copyright     != null) $metadataBag[" --copyright "     ] =  escapeshellarg($this->copyright      );
+        if($this->albumArtist   != null) $metadataBag[" --albumArtist "   ] =  escapeshellarg($this->albumArtist    );
+        if($this->description   != null) $metadataBag[" --description "   ] =  escapeshellarg($this->description    );
+        if($this->longdesc      != null) $metadataBag[" --longdesc "      ] =  escapeshellarg($this->longdesc       );
+        if($this->storedesc     != null) $metadataBag[" --storedesc "     ] =  escapeshellarg($this->storedesc      );
+        if($this->TVNetwork     != null) $metadataBag[" --TVNetwork "     ] =  escapeshellarg($this->TVNetwork      );
+        if($this->TVShowName    != null) $metadataBag[" --TVShowName "    ] =  escapeshellarg($this->TVShowName     );
+        if($this->TVEpisode     != null) $metadataBag[" --TVEpisode "     ] =  escapeshellarg($this->TVEpisode      );
+        if($this->TVSeasonNum   != null) $metadataBag[" --TVSeasonNum "   ] =  escapeshellarg($this->TVSeasonNum    );
+        if($this->TVEpisodeNum  != null) $metadataBag[" --TVEpisodeNum "  ] =  escapeshellarg($this->TVEpisodeNum   );
+        if($this->category      != null) $metadataBag[" --category "      ] =  escapeshellarg($this->category       );
+        if($this->keyword       != null) $metadataBag[" --keyword "       ] =  escapeshellarg($this->keyword        );
+        if($this->purchaseDate  != null) $metadataBag[" --purchaseDate "  ] =  escapeshellarg($this->purchaseDate   );
+        if($this->encodingTool  != null) $metadataBag[" --encodingTool "  ] =  escapeshellarg($this->encodingTool   );
+        if($this->encodedBy     != null) $metadataBag[" --encodedBy "     ] =  escapeshellarg($this->encodedBy      );
+        if($this->apID          != null) $metadataBag[" --apID "          ] =  escapeshellarg($this->apID           );
+        if($this->xID           != null) $metadataBag[" --xID "           ] =  escapeshellarg($this->xID            );
 
         return $metadataBag;
     }
@@ -344,18 +296,11 @@ class AtomicParsleyFile
         $output .= "<tr><td>Title</td><td>--title</td><td>" .self::getMaxLengthOfField("Title") . "</td></tr>";
         $output .= "<tr><td>Album</td><td>--album</td><td>" .self::getMaxLengthOfField("Album") . "</td></tr>";
         $output .= "<tr><td>Genre</td><td>--genre</td><td>" .self::getMaxLengthOfField("Genre") . "</td></tr>";
-        $output .= "<tr><td>Tracknum</td><td>--tracknum</td><td>" .self::getMaxLengthOfField("Tracknum") . "</td></tr>";
-        $output .= "<tr><td>Disk</td><td>--disk</td><td>" .self::getMaxLengthOfField("Disk") . "</td></tr>";
         $output .= "<tr><td>Comment</td><td>--comment</td><td>" .self::getMaxLengthOfField("Comment") . "</td></tr>";
         $output .= "<tr><td>Year</td><td>--year</td><td>" .self::getMaxLengthOfField("Year") . "</td></tr>";
         $output .= "<tr><td>Composer</td><td>--composer</td><td>" .self::getMaxLengthOfField("Composer") . "</td></tr>";
         $output .= "<tr><td>Copyright</td><td>--copyright</td><td>" .self::getMaxLengthOfField("Copyright") . "</td></tr>";
-        $output .= "<tr><td>Bpm</td><td>--bpm</td><td>" .self::getMaxLengthOfField("Bpm") . "</td></tr>";
         $output .= "<tr><td>AlbumArtist</td><td>--albumArtist</td><td>" .self::getMaxLengthOfField("AlbumArtist") . "</td></tr>";
-        $output .= "<tr><td>Compilation</td><td>--compilation</td><td>" .self::getMaxLengthOfField("Compilation") . "</td></tr>";
-        $output .= "<tr><td>Hdvideo</td><td>--hdvideo</td><td>" .self::getMaxLengthOfField("Hdvideo") . "</td></tr>";
-        $output .= "<tr><td>Advisory</td><td>--advisory</td><td>" .self::getMaxLengthOfField("Advisory") . "</td></tr>";
-        $output .= "<tr><td>Stik</td><td>--stik</td><td>" .self::getMaxLengthOfField("Stik") . "</td></tr>";
         $output .= "<tr><td>Description</td><td>--description</td><td>" .self::getMaxLengthOfField("Description") . "</td></tr>";
 //        $output .= "<tr><td>Longdesc</td><td>--longdesc</td><td>" .self::getMaxLengthOfField("Longdesc") . "</td></tr>";
 //        $output .= "<tr><td>Storedesc</td><td>--storedesc</td><td>" .self::getMaxLengthOfField("Storedesc") . "</td></tr>";
@@ -364,292 +309,27 @@ class AtomicParsleyFile
         $output .= "<tr><td>TVEpisode</td><td>--TVEpisode</td><td>" .self::getMaxLengthOfField("TVEpisode") . "</td></tr>";
         $output .= "<tr><td>TVSeasonNum</td><td>--TVSeasonNum</td><td>" .self::getMaxLengthOfField("TVSeasonNum") . "</td></tr>";
         $output .= "<tr><td>TVEpisodeNum</td><td>--TVEpisodeNum</td><td>" .self::getMaxLengthOfField("TVEpisodeNum") . "</td></tr>";
-        $output .= "<tr><td>PodcastFlag</td><td>--podcastFlag</td><td>" .self::getMaxLengthOfField("podcastFlag") . "</td></tr>";
         $output .= "<tr><td>Category</td><td>--category</td><td>" .self::getMaxLengthOfField("Category") . "</td></tr>";
         $output .= "<tr><td>Keyword</td><td>--keyword</td><td>" .self::getMaxLengthOfField("Keyword") . "</td></tr>";
-        $output .= "<tr><td>PodcastURL</td><td>--podcastURL</td><td>" .self::getMaxLengthOfField("PodcastURL") . "</td></tr>";
-        $output .= "<tr><td>PodcastGUID</td><td>--podcastGUID</td><td>" .self::getMaxLengthOfField("PodcastGUID") . "</td></tr>";
         $output .= "<tr><td>PurchaseDate</td><td>--purchaseDate</td><td>" .self::getMaxLengthOfField("PurchaseDate") . "</td></tr>";
         $output .= "<tr><td>EncodingTool</td><td>--encodingTool</td><td>" .self::getMaxLengthOfField("EncodingTool") . "</td></tr>";
         $output .= "<tr><td>EncodedBy</td><td>--encodedBy</td><td>" .self::getMaxLengthOfField("EncodedBy") . "</td></tr>";
         $output .= "<tr><td>apID</td><td>--apID</td><td>" .self::getMaxLengthOfField("apID") . "</td></tr>";
-        $output .= "<tr><td>cnID</td><td>--cnID</td><td>" .self::getMaxLengthOfField("cnID") . "</td></tr>";
-        $output .= "<tr><td>geID</td><td>--geID</td><td>" .self::getMaxLengthOfField("geID") . "</td></tr>";
         $output .= "<tr><td>xID</td><td>--xID</td><td>" .self::getMaxLengthOfField("xID") . "</td></tr>";
-        $output .= "<tr><td>Gapless</td><td>--gapless</td><td>" .self::getMaxLengthOfField("Gapless") . "</td></tr>";
-        $output .= "<tr><td>ContentRating</td><td>--contentRating</td><td>" .self::getMaxLengthOfField("ContentRating") . "</td></tr>";
         $output .= "</table>";
 
         echo $output;
     }
 
-    // Simple Setters
-    /**
-     * @param mixed $filename
-     */
-    public function setFilename($filename)
-    {
-        $this->filename = $filename;
+    public function isShort() {
+        return $this->short;
     }
 
-    /**
-     * @param mixed $artist
-     */
-    public function setArtist($artist)
-    {
-        $this->artist = $artist;
-    }
+
 
     /**
-     * @param mixed $title
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * @param mixed $album
-     */
-    public function setAlbum($album)
-    {
-        $this->album = $album;
-    }
-
-    /**
-     * @param mixed $genre
-     */
-    public function setGenre($genre)
-    {
-        $this->genre = $genre;
-    }
-
-    /**
-     * @param mixed $tracknum
-     */
-    public function setTracknum($tracknum)
-    {
-        $this->tracknum = $tracknum;
-    }
-
-    /**
-     * @param mixed $disk
-     */
-    public function setDisk($disk)
-    {
-        $this->disk = $disk;
-    }
-
-    /**
-     * @param mixed $comment
-     */
-    public function setComment($comment)
-    {
-        $this->comment = $comment;
-    }
-
-    /**
-     * @param mixed $year
-     */
-    public function setYear($year)
-    {
-        $this->year = $year;
-    }
-
-    /**
-     * @param mixed $lyrics
-     */
-    public function setLyrics($lyrics)
-    {
-        $this->lyrics = $lyrics;
-    }
-
-    /**
-     * @param mixed $lyricsFile
-     */
-    public function setLyricsFile($lyricsFile)
-    {
-        $this->lyricsFile = $lyricsFile;
-    }
-
-    /**
-     * @param mixed $composer
-     */
-    public function setComposer($composer)
-    {
-        $this->composer = $composer;
-    }
-
-    /**
-     * @param mixed $copyright
-     */
-    public function setCopyright($copyright)
-    {
-        $this->copyright = $copyright;
-    }
-
-    /**
-     * @param mixed $grouping
-     */
-    public function setGrouping($grouping)
-    {
-        $this->grouping = $grouping;
-    }
-
-    /**
-     * @param mixed $artwork
-     */
-    public function setArtwork($artwork)
-    {
-        $this->artwork = $artwork;
-    }
-
-    /**
-     * @param mixed $bpm
-     */
-    public function setBpm($bpm)
-    {
-        $this->bpm = $bpm;
-    }
-
-    /**
-     * @param mixed $albumArtist
-     */
-    public function setAlbumArtist($albumArtist)
-    {
-        $this->albumArtist = $albumArtist;
-    }
-
-    /**
-     * @param mixed $compilation
-     */
-    public function setCompilation($compilation)
-    {
-        $this->compilation = $compilation;
-    }
-
-    /**
-     * @param mixed $hdvideo
-     */
-    public function setHdvideo($hdvideo)
-    {
-        $this->hdvideo = $hdvideo;
-    }
-
-    /**
-     * @param mixed $advisory
-     */
-    public function setAdvisory($advisory)
-    {
-        $this->advisory = $advisory;
-    }
-
-    /**
-     * @param mixed $stik
-     */
-    public function setStik($stik)
-    {
-        $this->stik = $stik;
-    }
-
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @param mixed $longdesc
-     */
-    public function setLongdesc($longdesc)
-    {
-        $this->longdesc = $longdesc;
-    }
-
-    /**
-     * @param mixed $storedesc
-     */
-    public function setStoredesc($storedesc)
-    {
-        $this->storedesc = $storedesc;
-    }
-
-    /**
-     * @param mixed $TVNetwork
-     */
-    public function setTVNetwork($TVNetwork)
-    {
-        $this->TVNetwork = $TVNetwork;
-    }
-
-    /**
-     * @param mixed $TVShowName
-     */
-    public function setTVShowName($TVShowName)
-    {
-        $this->TVShowName = $TVShowName;
-    }
-
-    /**
-     * @param mixed $TVEpisode
-     */
-    public function setTVEpisode($TVEpisode)
-    {
-        $this->TVEpisode = $TVEpisode;
-    }
-
-    /**
-     * @param mixed $TVSeasonNum
-     */
-    public function setTVSeasonNum($TVSeasonNum)
-    {
-        $this->TVSeasonNum = $TVSeasonNum;
-    }
-
-    /**
-     * @param mixed $TVEpisodeNum
-     */
-    public function setTVEpisodeNum($TVEpisodeNum)
-    {
-        $this->TVEpisodeNum = $TVEpisodeNum;
-    }
-
-    /**
-     * @param mixed $podcastFlag
-     */
-    public function setPodcastFlag($podcastFlag)
-    {
-        $this->podcastFlag = $podcastFlag;
-    }
-
-    /**
-     * @param mixed $category
-     */
-    public function setCategory($category)
-    {
-        $this->category = $category;
-    }
-
-    /**
-     * @param mixed $keyword
-     */
-    public function setKeyword($keyword)
-    {
-        $this->keyword = $keyword;
-    }
-
-    /**
-     * @param mixed $podcastURL
-     */
-    public function setPodcastURL($podcastURL)
-    {
-        $this->podcastURL = $podcastURL;
-    }
-
-    // Simple Getters
-    /**
+     * Gets the value of filename.
+     *
      * @return mixed
      */
     public function getFilename()
@@ -658,262 +338,22 @@ class AtomicParsleyFile
     }
 
     /**
-     * @return mixed
+     * Sets the value of filename.
+     *
+     * @param mixed $filename the filename
+     *
+     * @return self
      */
-    public function getArtist()
+    public function setFilename($filename)
     {
-        return $this->artist;
+        $this->filename = $filename;
+
+        return $this;
     }
 
     /**
-     * @return mixed
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAlbum()
-    {
-        return $this->album;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGenre()
-    {
-        return $this->genre;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTracknum()
-    {
-        return $this->tracknum;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDisk()
-    {
-        return $this->disk;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComment()
-    {
-        return $this->comment;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getYear()
-    {
-        return $this->year;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLyrics()
-    {
-        return $this->lyrics;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLyricsFile()
-    {
-        return $this->lyricsFile;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComposer()
-    {
-        return $this->composer;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCopyright()
-    {
-        return $this->copyright;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGrouping()
-    {
-        return $this->grouping;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getArtwork()
-    {
-        return $this->artwork;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getBpm()
-    {
-        return $this->bpm;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAlbumArtist()
-    {
-        return $this->albumArtist;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCompilation()
-    {
-        return $this->compilation;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getHdvideo()
-    {
-        return $this->hdvideo;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAdvisory()
-    {
-        return $this->advisory;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStik()
-    {
-        return $this->stik;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLongdesc()
-    {
-        return $this->longdesc;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStoredesc()
-    {
-        return $this->storedesc;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTVNetwork()
-    {
-        return $this->TVNetwork;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTVShowName()
-    {
-        return $this->TVShowName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTVEpisode()
-    {
-        return $this->TVEpisode;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTVSeasonNum()
-    {
-        return $this->TVSeasonNum;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTVEpisodeNum()
-    {
-        return $this->TVEpisodeNum;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPodcastFlag()
-    {
-        return $this->podcastFlag;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getKeyword()
-    {
-        return $this->keyword;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPodcastURL()
-    {
-        return $this->podcastURL;
-    }
-
-    /**
+     * Gets the value of short.
+     *
      * @return mixed
      */
     public function getShort()
@@ -922,38 +362,550 @@ class AtomicParsleyFile
     }
 
     /**
-     * @param mixed $short
+     * Sets the value of short.
+     *
+     * @param mixed $short the short
+     *
+     * @return self
      */
     public function setShort($short)
     {
         $this->short = $short;
+
+        return $this;
     }
 
     /**
-     * @return boolean
-     */
-    public function isShort()
-    {
-        return $this->short;
-    }
-
-    /**
+     * Gets the value of artist.
+     *
      * @return mixed
      */
-    public function getPodcastGUID()
+    public function getArtist()
     {
-        return $this->podcastGUID;
+        return $this->artist;
     }
 
     /**
-     * @param mixed $podcastGUID
+     * Sets the value of artist.
+     *
+     * @param mixed $artist the artist
+     *
+     * @return self
      */
-    public function setPodcastGUID($podcastGUID)
+    public function setArtist($artist)
     {
-        $this->podcastGUID = $podcastGUID;
+        $this->artist = $artist;
+
+        return $this;
     }
 
     /**
+     * Gets the value of title.
+     *
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Sets the value of title.
+     *
+     * @param mixed $title the title
+     *
+     * @return self
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of album.
+     *
+     * @return mixed
+     */
+    public function getAlbum()
+    {
+        return $this->album;
+    }
+
+    /**
+     * Sets the value of album.
+     *
+     * @param mixed $album the album
+     *
+     * @return self
+     */
+    public function setAlbum($album)
+    {
+        $this->album = $album;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of genre.
+     *
+     * @return mixed
+     */
+    public function getGenre()
+    {
+        return $this->genre;
+    }
+
+    /**
+     * Sets the value of genre.
+     *
+     * @param mixed $genre the genre
+     *
+     * @return self
+     */
+    public function setGenre($genre)
+    {
+        $this->genre = $genre;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of comment.
+     *
+     * @return mixed
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Sets the value of comment.
+     *
+     * @param mixed $comment the comment
+     *
+     * @return self
+     */
+    public function setComment($comment)
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of year.
+     *
+     * @return mixed
+     */
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    /**
+     * Sets the value of year.
+     *
+     * @param mixed $year the year
+     *
+     * @return self
+     */
+    public function setYear($year)
+    {
+        $this->year = $year;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of lyrics.
+     *
+     * @return mixed
+     */
+    public function getLyrics()
+    {
+        return $this->lyrics;
+    }
+
+    /**
+     * Sets the value of lyrics.
+     *
+     * @param mixed $lyrics the lyrics
+     *
+     * @return self
+     */
+    public function setLyrics($lyrics)
+    {
+        $this->lyrics = $lyrics;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of composer.
+     *
+     * @return mixed
+     */
+    public function getComposer()
+    {
+        return $this->composer;
+    }
+
+    /**
+     * Sets the value of composer.
+     *
+     * @param mixed $composer the composer
+     *
+     * @return self
+     */
+    public function setComposer($composer)
+    {
+        $this->composer = $composer;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of copyright.
+     *
+     * @return mixed
+     */
+    public function getCopyright()
+    {
+        return $this->copyright;
+    }
+
+    /**
+     * Sets the value of copyright.
+     *
+     * @param mixed $copyright the copyright
+     *
+     * @return self
+     */
+    public function setCopyright($copyright)
+    {
+        $this->copyright = $copyright;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of grouping.
+     *
+     * @return mixed
+     */
+    public function getGrouping()
+    {
+        return $this->grouping;
+    }
+
+    /**
+     * Sets the value of grouping.
+     *
+     * @param mixed $grouping the grouping
+     *
+     * @return self
+     */
+    public function setGrouping($grouping)
+    {
+        $this->grouping = $grouping;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of artwork.
+     *
+     * @return mixed
+     */
+    public function getArtwork()
+    {
+        return $this->artwork;
+    }
+
+    /**
+     * Sets the value of artwork.
+     *
+     * @param mixed $artwork the artwork
+     *
+     * @return self
+     */
+    public function setArtwork($artwork)
+    {
+        $this->artwork = $artwork;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of albumArtist.
+     *
+     * @return mixed
+     */
+    public function getAlbumArtist()
+    {
+        return $this->albumArtist;
+    }
+
+    /**
+     * Sets the value of albumArtist.
+     *
+     * @param mixed $albumArtist the album artist
+     *
+     * @return self
+     */
+    public function setAlbumArtist($albumArtist)
+    {
+        $this->albumArtist = $albumArtist;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of description.
+     *
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Sets the value of description.
+     *
+     * @param mixed $description the description
+     *
+     * @return self
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of longdesc.
+     *
+     * @return mixed
+     */
+    public function getLongdesc()
+    {
+        return $this->longdesc;
+    }
+
+    /**
+     * Sets the value of longdesc.
+     *
+     * @param mixed $longdesc the longdesc
+     *
+     * @return self
+     */
+    public function setLongdesc($longdesc)
+    {
+        $this->longdesc = $longdesc;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of storedesc.
+     *
+     * @return mixed
+     */
+    public function getStoredesc()
+    {
+        return $this->storedesc;
+    }
+
+    /**
+     * Sets the value of storedesc.
+     *
+     * @param mixed $storedesc the storedesc
+     *
+     * @return self
+     */
+    public function setStoredesc($storedesc)
+    {
+        $this->storedesc = $storedesc;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of TVNetwork.
+     *
+     * @return mixed
+     */
+    public function getTVNetwork()
+    {
+        return $this->TVNetwork;
+    }
+
+    /**
+     * Sets the value of TVNetwork.
+     *
+     * @param mixed $TVNetwork the vnetwork
+     *
+     * @return self
+     */
+    public function setTVNetwork($TVNetwork)
+    {
+        $this->TVNetwork = $TVNetwork;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of TVShowName.
+     *
+     * @return mixed
+     */
+    public function getTVShowName()
+    {
+        return $this->TVShowName;
+    }
+
+    /**
+     * Sets the value of TVShowName.
+     *
+     * @param mixed $TVShowName the vshow name
+     *
+     * @return self
+     */
+    public function setTVShowName($TVShowName)
+    {
+        $this->TVShowName = $TVShowName;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of TVEpisode.
+     *
+     * @return mixed
+     */
+    public function getTVEpisode()
+    {
+        return $this->TVEpisode;
+    }
+
+    /**
+     * Sets the value of TVEpisode.
+     *
+     * @param mixed $TVEpisode the vepisode
+     *
+     * @return self
+     */
+    public function setTVEpisode($TVEpisode)
+    {
+        $this->TVEpisode = $TVEpisode;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of TVSeasonNum.
+     *
+     * @return mixed
+     */
+    public function getTVSeasonNum()
+    {
+        return $this->TVSeasonNum;
+    }
+
+    /**
+     * Sets the value of TVSeasonNum.
+     *
+     * @param mixed $TVSeasonNum the vseason num
+     *
+     * @return self
+     */
+    public function setTVSeasonNum($TVSeasonNum)
+    {
+        $this->TVSeasonNum = $TVSeasonNum;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of TVEpisodeNum.
+     *
+     * @return mixed
+     */
+    public function getTVEpisodeNum()
+    {
+        return $this->TVEpisodeNum;
+    }
+
+    /**
+     * Sets the value of TVEpisodeNum.
+     *
+     * @param mixed $TVEpisodeNum the vepisode num
+     *
+     * @return self
+     */
+    public function setTVEpisodeNum($TVEpisodeNum)
+    {
+        $this->TVEpisodeNum = $TVEpisodeNum;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of category.
+     *
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * Sets the value of category.
+     *
+     * @param mixed $category the category
+     *
+     * @return self
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of keyword.
+     *
+     * @return mixed
+     */
+    public function getKeyword()
+    {
+        return $this->keyword;
+    }
+
+    /**
+     * Sets the value of keyword.
+     *
+     * @param mixed $keyword the keyword
+     *
+     * @return self
+     */
+    public function setKeyword($keyword)
+    {
+        $this->keyword = $keyword;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of purchaseDate.
+     *
      * @return mixed
      */
     public function getPurchaseDate()
@@ -962,14 +914,22 @@ class AtomicParsleyFile
     }
 
     /**
-     * @param mixed $purchaseDate
+     * Sets the value of purchaseDate.
+     *
+     * @param mixed $purchaseDate the purchase date
+     *
+     * @return self
      */
     public function setPurchaseDate($purchaseDate)
     {
         $this->purchaseDate = $purchaseDate;
+
+        return $this;
     }
 
     /**
+     * Gets the value of encodingTool.
+     *
      * @return mixed
      */
     public function getEncodingTool()
@@ -978,46 +938,22 @@ class AtomicParsleyFile
     }
 
     /**
-     * @param mixed $encodingTool
+     * Sets the value of encodingTool.
+     *
+     * @param mixed $encodingTool the encoding tool
+     *
+     * @return self
      */
     public function setEncodingTool($encodingTool)
     {
         $this->encodingTool = $encodingTool;
+
+        return $this;
     }
 
     /**
-     * @return mixed
-     */
-    public function getGapless()
-    {
-        return $this->gapless;
-    }
-
-    /**
-     * @param mixed $gapless
-     */
-    public function setGapless($gapless)
-    {
-        $this->gapless = $gapless;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getContentRating()
-    {
-        return $this->contentRating;
-    }
-
-    /**
-     * @param mixed $contentRating
-     */
-    public function setContentRating($contentRating)
-    {
-        $this->contentRating = $contentRating;
-    }
-
-    /**
+     * Gets the value of encodedBy.
+     *
      * @return mixed
      */
     public function getEncodedBy()
@@ -1026,14 +962,22 @@ class AtomicParsleyFile
     }
 
     /**
-     * @param mixed $encodedBy
+     * Sets the value of encodedBy.
+     *
+     * @param mixed $encodedBy the encoded by
+     *
+     * @return self
      */
     public function setEncodedBy($encodedBy)
     {
         $this->encodedBy = $encodedBy;
+
+        return $this;
     }
 
     /**
+     * Gets the value of apID.
+     *
      * @return mixed
      */
     public function getApID()
@@ -1042,46 +986,22 @@ class AtomicParsleyFile
     }
 
     /**
-     * @param mixed $apID
+     * Sets the value of apID.
+     *
+     * @param mixed $apID the ap
+     *
+     * @return self
      */
     public function setApID($apID)
     {
         $this->apID = $apID;
+
+        return $this;
     }
 
     /**
-     * @return mixed
-     */
-    public function getCnID()
-    {
-        return $this->cnID;
-    }
-
-    /**
-     * @param mixed $cnID
-     */
-    public function setCnID($cnID)
-    {
-        $this->cnID = $cnID;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGeID()
-    {
-        return $this->geID;
-    }
-
-    /**
-     * @param mixed $geID
-     */
-    public function setGeID($geID)
-    {
-        $this->geID = $geID;
-    }
-
-    /**
+     * Gets the value of xID.
+     *
      * @return mixed
      */
     public function getXID()
@@ -1090,13 +1010,16 @@ class AtomicParsleyFile
     }
 
     /**
-     * @param mixed $xID
+     * Sets the value of xID.
+     *
+     * @param mixed $xID the x
+     *
+     * @return self
      */
     public function setXID($xID)
     {
         $this->xID = $xID;
+
+        return $this;
     }
-
-
-
 }
