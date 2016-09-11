@@ -1,7 +1,5 @@
 <?php
 
-// TODO: Beim Einlesen auf UTF-16 achten!
-
 class AtomicParsleyFile
 {
     const filepath = "/tmp/Metadata-Attacker/";

@@ -443,10 +443,12 @@
                                     <button type="button" class="btn btn-default btn-xs" id="videoPastePayload">click here</button>
                                     to insert a big payload collection aggregated from
                                     <a href="https://www.owasp.org/index.php/XSS_Filter_Evasion_Cheat_Sheet" target="owasp">owasp.org</a> and
-                                    <a href="http://html5sec.org/" target="html5sec">html5sec.org</a>, that should create an alert popup on
-                                    vulnerable sites.
+                                    <a href="http://html5sec.org/" target="html5sec">html5sec.org</a>, that should create an alert popup on vulnerable sites.
+                                    <span class="text-muted">(If your payload is longer than the possible amount of characters it will be cut off.)</span>
                                 </div>
                             </div>
+
+                            
                             <button class="btn btn-warning btn-lg" data-loading-text="Loading...">
                                 <span class="glyphicon glyphicon-download-alt"></span> Save
                             </button>
@@ -462,7 +464,7 @@
 
 <nav class="navbar navbar-default navbar-fixed-bottom">
     <div class="container">
-        <a class="navbar-brand" href="/">Metadata-Attacker | Ruhr-University Bochum | A MIT licensed open source pentesting tool for testing webservices against XSS vulnerabilities</a>
+        <a class="navbar-brand" href="#">Metadata-Attacker | Ruhr-University Bochum | A MIT licensed open source pentesting tool for testing webservices against XSS vulnerabilities</a>
     </div>
 </nav>
 
