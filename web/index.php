@@ -5,8 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="cache-control" content="no-cache">
+    
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="/style.css">
+    <link rel="shortcut icon" href="/favicon.png" type="image/png">
 
     <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -401,8 +403,8 @@
                             </h5>
                             <div class="well">
                                 <select multiple="" class="form-control" name="fields[]" id="videoSelectBox" required="required">
-                                    <option value="artist">Artist</span></option>
-                                    <option value="title">Title</option>
+                                    <option value="artist" selected="selected">Artist</span></option>
+                                    <option value="title" selected="selected">Title</option>
                                     <option value="album">Album</option>
                                     <option value="genre">Genre</option>
                                     <option value="comment">Comment</option>
@@ -411,7 +413,7 @@
                                     <option value="composer">Composer</option>
                                     <option value="copyright">Copyright</option>
                                     <option value="albumArtist">Album Artist</option>
-                                    <option value="description">Description</option>
+                                    <option value="description" selected="selected">Description</option>
                                     <option value="longdesc">Long Description</option>
                                     <option value="storedesc">Store Description</option>
                                     <option value="TVNetwork">TV Network</option>
@@ -419,8 +421,6 @@
                                     <option value="TVEpisode">TV Episode</option>
                                     <option value="category">Category</option>
                                     <option value="keyword">Keyword</option>
-                                    <option value="podcastURL">Podcast URL</option>
-                                    <option value="podcastGUID">Podcast GUID</option>
                                     <option value="purchaseDate">Purchase Date</option>
                                     <option value="encodingTool">Encoding Tool</option>
                                     <option value="encodedBy">Encoded by</option>
