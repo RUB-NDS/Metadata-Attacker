@@ -20,6 +20,6 @@ When finished open your favorite browser and switch to the docker ip or [localho
 
 ## Credits
 
-  - Image-Attacker developed by @mniemietz
+  - Image-Attacker developed by __[@mniemietz](https://duckduckgo.com)__
   - Audio-Attacker developed by @derctwr
   - Video-Attacker, project merging and docker containers by @Lednerb
