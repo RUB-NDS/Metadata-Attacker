@@ -17,3 +17,9 @@ Now you can simply follow these easy steps:
   3. run `docker-compose up -d`
 
 When finished open your favorite browser and switch to the docker ip or [localhost](http://localhost)
+
+## Credits
+
+  - Image-Attacker developed by @mniemietz
+  - Audio-Attacker developed by @derctwr
+  - Video-Attacker, project merging and docker containers by @Lednerb
