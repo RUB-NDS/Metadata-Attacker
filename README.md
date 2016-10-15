@@ -4,7 +4,7 @@ With this small suite of open source pentesting tools you're able to create an i
 audio (.mp3) or video (.mp4) file containing your custom metadata or a set of cross-site scripting
 vectors to test any webservice against possible XSS vulnerabilities when displaying unfiltered meta data.
 
-![](screenshot.png?raw=true)
+![](screenshot-tool.png?raw=true)
 
 
 ## Installation / Usage
