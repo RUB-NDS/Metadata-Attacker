@@ -40,7 +40,6 @@
         }
     };
 
-// TODO: Error if only deactivated fields are used.
 
     if ( $video->save() ) {
         $video->download();

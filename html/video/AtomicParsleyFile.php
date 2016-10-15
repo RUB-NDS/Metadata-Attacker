@@ -71,7 +71,7 @@ class AtomicParsleyFile
      * Reads all given metadata via AtomicParsley from file and sets the variables.
      */
     public function readMetadata() {
-        // Liefert lange Liste von Codeausgabe
+
         exec("AtomicParsley " . $this->getFullFilepath() . " -t", $atomicParsleyReturns);
 
         foreach ($atomicParsleyReturns as $entry) {
@@ -139,7 +139,7 @@ class AtomicParsleyFile
         $this->filename = md5(microtime()) . ".mp4";
         $success = exec("AtomicParsley " .
             $this->getTestfile() .
-            " --artwork /var/www/attacker/web/video/artwork.jpg" .
+            " --artwork /var/www/html/video/artwork.jpg" .
             " -o " . $this->getFullFilepath()
         );
         if(($success !== false) && filesize($this->getFullFilepath()) > 100){
@@ -221,9 +221,9 @@ class AtomicParsleyFile
      */
     public function getTestfile() {
         if($this->isShort())
-            return "/var/www/attacker/web/video/30sec.mp4";
+            return "/var/www/html/video/30sec.mp4";
 
-        return "/var/www/attacker/web/video/10min.mp4";
+        return "/var/www/html/video/10min.mp4";
     }
 
     /**
