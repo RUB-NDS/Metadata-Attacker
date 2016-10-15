@@ -8,15 +8,13 @@ vectors to test any webservice against possible XSS vulnerabilities when display
 
 
 ## Installation / Usage
-First install [docker](https://www.docker.com/products/docker) and [docker-compose](https://docs.docker.com/compose/install/) on your host system.
+First install [docker](https://www.docker.com/products/docker) on your host system.
 
-Now you can simply follow these easy steps:
+Now you can simply run the following command:
 
-  1. [Download](https://github.com/RUB-NDS/Metadata-Attacker/archive/master.zip) and unzip this repository (or `git clone` it)
-  2. `cd` to the unzipped folder
-  3. run `docker-compose up -d`
+`docker run -p 80:80 --name metadta-attacker --rm lednerb/metadata-attacker`
 
-When finished open your favorite browser and switch to the docker ip or [localhost](http://localhost)
+When finished open your favorite browser and switch to the docker ip or [http://localhost](http://localhost)
 
 ## Credits
 
