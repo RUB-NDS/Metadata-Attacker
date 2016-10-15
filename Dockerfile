@@ -36,9 +36,8 @@ RUN cd /usr/local/bin \
     && chmod +x composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-ADD . /var/www/
-
 WORKDIR /var/www
+ADD . .
 RUN composer install
 
 WORKDIR /var/www/html
