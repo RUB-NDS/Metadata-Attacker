@@ -39,7 +39,6 @@ class AtomicParsleyFile
 
     /**
      * AtomicParsleyFile constructor.
-     *
      */
     public function __construct($loadFileFromPath = null)
     {
@@ -87,7 +86,7 @@ class AtomicParsleyFile
                 $this->setGenre(substr($entry, 23));
             else if(strpos($entry, 'Atom "©cmt"') !== false)
                 $this->setComment(substr($entry, 23));
-            else if(strpos($entry, 'Atom "©day"') !== false)    
+            else if(strpos($entry, 'Atom "©day"') !== false)
                 $this->setYear(substr($entry, 23));
             else if(strpos($entry, 'Atom "©lyr"') !== false)
                 $this->setLyrics(substr($entry, 23));
@@ -145,22 +144,17 @@ class AtomicParsleyFile
         if(($success !== false) && filesize($this->getFullFilepath()) > 100){
 
             foreach ($this->getMetadataBag() as $key => $value) {
-                $oldFilepath = $this->getFullFilepath();
-                $this->filename = md5(microtime()) . ".mp4";
                 $success = exec("AtomicParsley " .
-                    $oldFilepath .
+                    $this->getFullFilepath() .
                     $key . " " . $value .
-                    // $key . " \"$(cat " . $dummyValueFilepath . ")\"".
-                    " -o " . $this->getFullFilepath()
+                    " --overWrite "
                 );
-                if ($success === false) 
+                if ($success === false)
                     return false;
             }
 
             return true;
         }
-
-
         return false;
     }
 
@@ -322,8 +316,6 @@ class AtomicParsleyFile
     public function isShort() {
         return $this->short;
     }
-
-
 
     /**
      * Gets the value of filename.

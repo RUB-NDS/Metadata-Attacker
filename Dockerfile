@@ -20,7 +20,7 @@ RUN hg clone https://bitbucket.org/wez/atomicparsley \
     && ./autogen.sh  \
     && ./configure \
     && make \
-    && make install 
+    && make install
 
 # Download and install phpunit
 RUN wget https://phar.phpunit.de/phpunit.phar \

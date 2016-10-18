@@ -122,9 +122,7 @@ class AtomicParsleyFileTest extends PHPUnit_Framework_TestCase
     /** @test */
     public function the_user_can_enter_much_text_in_longdesc_field()
     {
-        $content = iconv('UTF-16', 'UTF-16', file_get_contents('/var/www/attacker/web/video/xss.txt'));
-
-
+        $content = iconv('UTF-16', 'UTF-16', file_get_contents('/var/www/html/video/xss.txt'));
 
         $file = new AtomicParsleyFile();
         $file->setLongdesc($content);
