@@ -14,7 +14,7 @@ First install [docker](https://www.docker.com/products/docker) on your host syst
 
 Now you can simply run the following command:
 
-`sudo docker run -p 80:80 --name metadta-attacker --rm lednerb/metadata-attacker`
+`sudo docker run -p 80:80 --rm lednerb/metadata-attacker`
 
 When finished open your favorite browser and switch to the docker ip or [http://localhost](http://localhost)
 
