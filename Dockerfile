@@ -1,4 +1,4 @@
-FROM php:7.0-apache
+FROM php:7.1-apache
 
 MAINTAINER Sascha Brendel <sascha.brendel@ruhr-uni-bochum.de>
 
