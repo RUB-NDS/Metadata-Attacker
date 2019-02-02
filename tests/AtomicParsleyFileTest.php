@@ -1,6 +1,8 @@
 <?php
 
-class AtomicParsleyFileTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class AtomicParsleyFileTest extends TestCase
 {
     /** @test */
     public function setters_and_getters_are_working()
@@ -164,10 +166,10 @@ class AtomicParsleyFileTest extends PHPUnit_Framework_TestCase
      * Deletes the directory with the testing files after all tests passed.
      * Code snipped by @alcuadrado on http://stackoverflow.com/questions/3349753/delete-directory-with-files-in-it#3349792
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         $dirPath = AtomicParsleyFile::filepath;
-        if (! is_dir($dirPath)) {
+        if (!is_dir($dirPath)) {
             throw new InvcalidArgumentException("$dirPath must be a directory");
         }
         if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {

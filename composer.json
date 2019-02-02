@@ -1,7 +1,13 @@
 {
     "autoload": {
-      "classmap": [
-        "html/video"
-      ]
+        "classmap": [
+            "html/video"
+        ]
+    },
+    "require": {
+        "php": "^7.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
     }
 }
